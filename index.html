@@ -20,30 +20,30 @@
   .contenedor-lirio{ position:relative; width:92%; max-width:540px; height:88vh; max-height:760px; }
   svg{ width:100%; height:100%; filter:drop-shadow(0 0 25px rgba(244,166,198,0.3)); }
 
-  .tallo{ stroke-dasharray:700; stroke-dashoffset:700; animation:dibujarTallo 2.2s ease forwards; }
-  .hoja{ opacity:0; animation:aparecerFlor .9s ease 1.7s forwards; }
-  .petalo{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 1s ease forwards, respirar 4.5s ease-in-out infinite; }
-  .peca{ opacity:0; animation:aparecerFlor .8s ease forwards; }
-  .estambre{ opacity:0; animation:aparecerFlor .8s ease forwards; }
-  .lazo{ opacity:0; animation:aparecerLazo 1s ease 2.8s forwards; }
-  .flor-extra{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 1.1s ease forwards, respirar 5s ease-in-out infinite; animation-delay:2.1s,3.2s; }
+  .tallo{ stroke-dasharray:700; stroke-dashoffset:700; animation:dibujarTallo 4.4s cubic-bezier(.45,0,.15,1) forwards; }
+  .hoja{ opacity:0; animation:aparecerFlor 2.2s ease 3.2s forwards; }
+  .petalo{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 2.6s ease forwards, respirar 8s ease-in-out infinite; }
+  .peca{ opacity:0; animation:aparecerFlor 1.8s ease forwards; }
+  .estambre{ opacity:0; animation:aparecerFlor 1.8s ease forwards; }
+  .lazo{ transform-box:fill-box; transform-origin:50% 50%; opacity:0; animation:aparecerLazo 2.2s cubic-bezier(.2,.8,.2,1) 6.4s forwards; }
+  .flor-extra{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 2.6s ease forwards, respirar 8.5s ease-in-out infinite; animation-delay:4.2s,7s; }
 
-  .petalo-trasero{ animation-delay:1.4s, 2.5s; }
-  .petalo-delantero{ animation-delay:1.65s, 2.75s; }
-  .petalo-centro{ animation-delay:1.9s, 3s; }
-  .peca{ animation-delay:2.2s; }
-  .estambre{ animation-delay:2s; }
+  .petalo-trasero{ animation-delay:3.2s, 5.8s; }
+  .petalo-delantero{ animation-delay:3.7s, 6.3s; }
+  .petalo-centro{ animation-delay:4.2s, 6.8s; }
+  .peca{ animation-delay:4.8s; }
+  .estambre{ animation-delay:4.5s; }
 
   @keyframes dibujarTallo{ to{ stroke-dashoffset:0; } }
   @keyframes aparecerFlor{ to{ opacity:1; } }
-  @keyframes aparecerLazo{ from{ opacity:0; transform:scale(.7); } to{ opacity:1; transform:scale(1); } }
-  @keyframes respirar{ 0%,100%{ transform:scale(1) rotate(0deg); } 50%{ transform:scale(1.015) rotate(.4deg); } }
+  @keyframes aparecerLazo{ from{ opacity:0; transform:scale(.6); } to{ opacity:1; transform:scale(1); } }
+  @keyframes respirar{ 0%,100%{ transform:scale(1) rotate(0deg); } 50%{ transform:scale(1.012) rotate(.3deg); } }
 
   .titulo-principal{
     position:absolute; bottom:5%; width:100%; text-align:center;
     font-family:'Playfair Display',serif; font-style:italic; font-size:2rem; letter-spacing:.5px;
     text-shadow:0 0 18px rgba(244,166,198,.6); opacity:0;
-    animation:aparecerFlor 2s ease 3.4s forwards; pointer-events:none;
+    animation:aparecerFlor 3s ease 8.5s forwards; pointer-events:none;
   }
   .petalo-caida{ position:absolute; width:14px; height:22px; border-radius:15px 0 15px 15px; top:-30px; z-index:0; opacity:.55; filter:blur(.5px); pointer-events:none; }
   .section-hidden{ display:none; }
@@ -194,15 +194,28 @@
         <g class="flor-extra"><use href="#rosa" transform="translate(350,355) rotate(16) scale(.9)"/></g>
         <use href="#lirio" transform="translate(300,235) rotate(-8) scale(1.05)"/>
 
-        <!-- LAZO que une los tallos -->
-        <g class="lazo" transform="translate(260,483)">
-          <path d="M-95,-9 C-58,-27 58,-27 95,-9 L95,13 C58,29 -58,29 -95,13 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.5"/>
-          <path d="M-13,9 C-28,55 -38,100 -56,138 L-28,138 C-14,96 -8,55 0,13 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.2"/>
-          <path d="M13,9 C28,55 38,100 56,138 L28,138 C14,96 8,55 0,13 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.2"/>
-          <path d="M-13,1 C-56,-38 -88,-19 -65,13 C-47,34 -19,19 -13,1 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.5"/>
-          <path d="M13,1 C56,-38 88,-19 65,13 C47,34 19,19 13,1 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.5"/>
-          <ellipse cx="0" cy="3" rx="14" ry="10" fill="#f06a95" stroke="#8f1c46" stroke-width="1.5"/>
-          <path d="M-55,-28 C-38,-32 -10,-24 -6,-9" fill="none" stroke="#ffd7e6" stroke-width="2" opacity=".6"/>
+        <!-- LAZO que une los tallos, ajustado al grosor real del ramo -->
+        <g transform="translate(260,481)">
+        <g class="lazo">
+          <!-- cinta que envuelve el haz de tallos -->
+          <path d="M-46,-13 C-20,-22 20,-22 46,-13 L46,6 C46,15 20,20 0,20 C-20,20 -46,15 -46,6 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.4"/>
+          <path d="M-46,-13 C-20,-22 20,-22 46,-13" fill="none" stroke="#ffd7e6" stroke-width="1.4" opacity=".5"/>
+
+          <!-- colas del lazo, cayendo sobre dos de los tallos del abanico -->
+          <path d="M-10,10 C-24,45 -34,85 -50,118 L-30,122 C-18,90 -10,55 4,14 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.1"/>
+          <path d="M10,10 C24,45 34,85 50,118 L30,122 C18,90 10,55 -4,14 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.1"/>
+          <path d="M-32,110 L-50,118 L-38,128 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1"/>
+          <path d="M32,110 L50,118 L38,128 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1"/>
+
+          <!-- lazadas del moño, centradas sobre la cinta -->
+          <path d="M-8,-4 C-40,-30 -62,-14 -46,8 C-34,24 -14,14 -8,-4 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.4"/>
+          <path d="M8,-4 C40,-30 62,-14 46,8 C34,24 14,14 8,-4 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.4"/>
+          <path d="M-32,-16 C-20,-19 -8,-13 -6,-4" fill="none" stroke="#ffe6ef" stroke-width="1.6" opacity=".6"/>
+          <path d="M32,-16 C20,-19 8,-13 6,-4" fill="none" stroke="#ffe6ef" stroke-width="1.6" opacity=".6"/>
+
+          <!-- nudo central -->
+          <ellipse cx="0" cy="0" rx="11" ry="9" fill="#f06a95" stroke="#8f1c46" stroke-width="1.4"/>
+        </g>
         </g>
       </svg>
       <div class="titulo-principal">Un ramo para ti 💐</div>
@@ -216,7 +229,7 @@
       const p=document.createElement('div');
       p.classList.add('petalo-caida');
       p.style.left=Math.random()*window.innerWidth+'px';
-      p.style.animationDuration=(Math.random()*5+5)+'s';
+      p.style.animationDuration=(Math.random()*6+9)+'s';
       p.style.animationName='caer';
       p.style.animationTimingFunction='linear';
       p.style.animationFillMode='forwards';
@@ -226,7 +239,7 @@
       const hue=330+Math.random()*20;
       p.style.backgroundColor=`hsl(${hue},70%,88%)`;
       document.body.appendChild(p);
-      setTimeout(()=>p.remove(),11000);
+      setTimeout(()=>p.remove(),16000);
     }
     const styleSheet=document.createElement('style');
     styleSheet.textContent=`@keyframes caer{ to{ transform:translateY(110vh) rotate(300deg); opacity:0; } }`;
@@ -234,7 +247,7 @@
 
     let intervaloPetalos;
     const observer=new IntersectionObserver((entries)=>{
-      if(entries[0].isIntersecting){ intervaloPetalos=setInterval(crearPetalo,450); }
+      if(entries[0].isIntersecting){ intervaloPetalos=setInterval(crearPetalo,900); }
       else{ clearInterval(intervaloPetalos); }
     });
     observer.observe(document.querySelector('.section-inicio'));
