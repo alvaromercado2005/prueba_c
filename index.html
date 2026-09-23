@@ -20,30 +20,29 @@
   .contenedor-lirio{ position:relative; width:92%; max-width:540px; height:88vh; max-height:760px; }
   svg{ width:100%; height:100%; filter:drop-shadow(0 0 25px rgba(244,166,198,0.3)); }
 
-  .tallo{ stroke-dasharray:700; stroke-dashoffset:700; animation:dibujarTallo 4.4s cubic-bezier(.45,0,.15,1) forwards; }
-  .hoja{ opacity:0; animation:aparecerFlor 2.2s ease 3.2s forwards; }
+  .tallo{ stroke-dasharray:400; stroke-dashoffset:400; animation:dibujarTallo 4s cubic-bezier(.45,0,.15,1) forwards; }
+  .hoja{ opacity:0; animation:aparecerFlor 2.2s ease 2.6s forwards; }
   .petalo{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 2.6s ease forwards, respirar 8s ease-in-out infinite; }
   .peca{ opacity:0; animation:aparecerFlor 1.8s ease forwards; }
   .estambre{ opacity:0; animation:aparecerFlor 1.8s ease forwards; }
-  .lazo{ transform-box:fill-box; transform-origin:50% 50%; opacity:0; animation:aparecerLazo 2.2s cubic-bezier(.2,.8,.2,1) 6.4s forwards; }
-  .flor-extra{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 2.6s ease forwards, respirar 8.5s ease-in-out infinite; animation-delay:4.2s,7s; }
+  .papel{ opacity:0; animation:aparecerFlor 2s ease 4.6s forwards; }
+  .flor-extra{ transform-box:fill-box; transform-origin:50% 100%; opacity:0; animation:aparecerFlor 2.6s ease forwards, respirar 8.5s ease-in-out infinite; animation-delay:3.2s,6s; }
 
-  .petalo-trasero{ animation-delay:3.2s, 5.8s; }
-  .petalo-delantero{ animation-delay:3.7s, 6.3s; }
-  .petalo-centro{ animation-delay:4.2s, 6.8s; }
-  .peca{ animation-delay:4.8s; }
-  .estambre{ animation-delay:4.5s; }
+  .petalo-trasero{ animation-delay:2.4s, 5s; }
+  .petalo-delantero{ animation-delay:2.8s, 5.4s; }
+  .petalo-centro{ animation-delay:3.2s, 5.8s; }
+  .peca{ animation-delay:3.8s; }
+  .estambre{ animation-delay:3.5s; }
 
   @keyframes dibujarTallo{ to{ stroke-dashoffset:0; } }
   @keyframes aparecerFlor{ to{ opacity:1; } }
-  @keyframes aparecerLazo{ from{ opacity:0; transform:scale(.6); } to{ opacity:1; transform:scale(1); } }
   @keyframes respirar{ 0%,100%{ transform:scale(1) rotate(0deg); } 50%{ transform:scale(1.012) rotate(.3deg); } }
 
   .titulo-principal{
     position:absolute; bottom:5%; width:100%; text-align:center;
     font-family:'Playfair Display',serif; font-style:italic; font-size:2rem; letter-spacing:.5px;
     text-shadow:0 0 18px rgba(244,166,198,.6); opacity:0;
-    animation:aparecerFlor 3s ease 8.5s forwards; pointer-events:none;
+    animation:aparecerFlor 3s ease 7s forwards; pointer-events:none;
   }
   .petalo-caida{ position:absolute; width:14px; height:22px; border-radius:15px 0 15px 15px; top:-30px; z-index:0; opacity:.55; filter:blur(.5px); pointer-events:none; }
   .section-hidden{ display:none; }
@@ -55,10 +54,10 @@
       <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="gradPetalo" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#fde4ee"/><stop offset="100%" stop-color="#f2a3c6"/>
+            <stop offset="0%" stop-color="#ffe3ef"/><stop offset="45%" stop-color="#fca9cf"/><stop offset="100%" stop-color="#e8558f"/>
           </linearGradient>
           <linearGradient id="gradRaya" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#e8558f" stop-opacity=".9"/><stop offset="100%" stop-color="#f2a3c6" stop-opacity="0"/>
+            <stop offset="0%" stop-color="#c81f5f" stop-opacity=".9"/><stop offset="100%" stop-color="#e8558f" stop-opacity="0"/>
           </linearGradient>
           <linearGradient id="gradTallo" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#3f8f3a"/><stop offset="100%" stop-color="#7fd858"/>
@@ -67,155 +66,203 @@
             <stop offset="0%" stop-color="#c9628f" stop-opacity=".35"/><stop offset="100%" stop-color="#c9628f" stop-opacity="0"/>
           </radialGradient>
           <radialGradient id="gradRosaClaro" cx="50%" cy="60%" r="60%">
-            <stop offset="0%" stop-color="#f9c2d6"/><stop offset="100%" stop-color="#e8558f"/>
+            <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f3e9ea"/>
           </radialGradient>
           <radialGradient id="gradRosaMedio" cx="50%" cy="60%" r="60%">
-            <stop offset="0%" stop-color="#e0507e"/><stop offset="100%" stop-color="#b5265a"/>
+            <stop offset="0%" stop-color="#f6eef0"/><stop offset="100%" stop-color="#e3d3d6"/>
           </radialGradient>
-          <linearGradient id="gradLazo" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#f06a95"/><stop offset="50%" stop-color="#d43d72"/><stop offset="100%" stop-color="#b5265a"/>
+          <radialGradient id="gradGerberaCentro" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#6b5a2e"/><stop offset="100%" stop-color="#3f3319"/>
+          </radialGradient>
+          <linearGradient id="gradGerberaPetalo" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff8a3d"/><stop offset="100%" stop-color="#e35a10"/>
+          </linearGradient>
+          <linearGradient id="gradClavelClaro" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffd6e6"/><stop offset="100%" stop-color="#ef7fac"/>
+          </linearGradient>
+          <linearGradient id="gradClavelOscuro" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#e8558f"/><stop offset="100%" stop-color="#c81f5f"/>
+          </linearGradient>
+          <linearGradient id="gradMargarita" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#d9a8f0"/><stop offset="100%" stop-color="#a45fc9"/>
+          </linearGradient>
+          <linearGradient id="gradCapullo" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#9fcb7a"/><stop offset="100%" stop-color="#5f9c48"/>
+          </linearGradient>
+          <linearGradient id="gradPapel" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fdf6d8"/><stop offset="100%" stop-color="#f3e6a3"/>
           </linearGradient>
           <filter id="blurSuave" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter>
-          <filter id="sombraFlor" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#3a0d20" flood-opacity="0.22"/></filter>
+          <filter id="sombraFlor" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#3a0d20" flood-opacity="0.2"/></filter>
 
-          <!-- LIRIO: origen (0,0) en la base donde se une al tallo -->
+          <!-- LIRIO -->
           <g id="lirio">
             <g filter="url(#sombraFlor)">
               <g filter="url(#blurSuave)" opacity=".92">
-                <path class="petalo petalo-trasero" d="M0,10 C-55,-15 -88,-70 -82,-130 C-78,-168 -55,-185 -38,-172 C-52,-150 -50,-110 -40,-85 C-52,-92 -60,-80 -50,-60 C-30,-30 -10,-5 0,10 Z" fill="url(#gradPetalo)" stroke="#dba9c3" stroke-width="1.2"/>
-                <path class="petalo petalo-trasero" d="M0,10 C55,-15 88,-70 82,-130 C78,-168 55,-185 38,-172 C52,-150 50,-110 40,-85 C52,-92 60,-80 50,-60 C30,-30 10,-5 0,10 Z" fill="url(#gradPetalo)" stroke="#dba9c3" stroke-width="1.2"/>
+                <path class="petalo petalo-trasero" d="M0,10 C-55,-15 -88,-70 -82,-130 C-78,-168 -55,-185 -38,-172 C-52,-150 -50,-110 -40,-85 C-52,-92 -60,-80 -50,-60 C-30,-30 -10,-5 0,10 Z" fill="url(#gradPetalo)" stroke="#c8558f" stroke-width="1.2"/>
+                <path class="petalo petalo-trasero" d="M0,10 C55,-15 88,-70 82,-130 C78,-168 55,-185 38,-172 C52,-150 50,-110 40,-85 C52,-92 60,-80 50,-60 C30,-30 10,-5 0,10 Z" fill="url(#gradPetalo)" stroke="#c8558f" stroke-width="1.2"/>
               </g>
-              <path class="petalo petalo-delantero" d="M0,18 C-60,10 -105,-45 -108,-115 C-110,-160 -90,-195 -68,-198 C-78,-175 -70,-150 -50,-140 C-62,-155 -58,-172 -42,-170 C-48,-140 -35,-105 -18,-90 C-30,-95 -38,-75 -22,-55 C-8,-30 0,-5 0,18 Z" fill="url(#gradPetalo)" stroke="#e4b6cf" stroke-width="1.4"/>
-              <path class="petalo petalo-delantero" d="M0,18 C60,10 105,-45 108,-115 C110,-160 90,-195 68,-198 C78,-175 70,-150 50,-140 C62,-155 58,-172 42,-170 C48,-140 35,-105 18,-90 C30,-95 38,-75 22,-55 C8,-30 0,-5 0,18 Z" fill="url(#gradPetalo)" stroke="#e4b6cf" stroke-width="1.4"/>
-              <path class="petalo petalo-centro" d="M0,22 C-28,-5 -38,-90 -22,-160 C-15,-188 8,-192 12,-172 C0,-165 -6,-130 2,-95 C10,-120 20,-110 14,-80 C22,-90 18,-55 6,-20 C4,-8 2,10 0,22 Z" fill="url(#gradPetalo)" stroke="#e4b6cf" stroke-width="1.4"/>
+              <path class="petalo petalo-delantero" d="M0,18 C-60,10 -105,-45 -108,-115 C-110,-160 -90,-195 -68,-198 C-78,-175 -70,-150 -50,-140 C-62,-155 -58,-172 -42,-170 C-48,-140 -35,-105 -18,-90 C-30,-95 -38,-75 -22,-55 C-8,-30 0,-5 0,18 Z" fill="url(#gradPetalo)" stroke="#d43d72" stroke-width="1.4"/>
+              <path class="petalo petalo-delantero" d="M0,18 C60,10 105,-45 108,-115 C110,-160 90,-195 68,-198 C78,-175 70,-150 50,-140 C62,-155 58,-172 42,-170 C48,-140 35,-105 18,-90 C30,-95 38,-75 22,-55 C8,-30 0,-5 0,18 Z" fill="url(#gradPetalo)" stroke="#d43d72" stroke-width="1.4"/>
+              <path class="petalo petalo-centro" d="M0,22 C-28,-5 -38,-90 -22,-160 C-15,-188 8,-192 12,-172 C0,-165 -6,-130 2,-95 C10,-120 20,-110 14,-80 C22,-90 18,-55 6,-20 C4,-8 2,10 0,22 Z" fill="url(#gradPetalo)" stroke="#d43d72" stroke-width="1.4"/>
               <ellipse cx="0" cy="-5" rx="70" ry="40" fill="url(#gradSombraPetalo)"/>
-              <g stroke="#e79cbc" stroke-width=".6" opacity=".55" fill="none">
-                <path d="M0,10 C-2,-50 -6,-110 -14,-165"/><path d="M0,10 C2,-50 6,-110 14,-165"/>
-                <path d="M-6,10 C-18,-45 -35,-95 -55,-145"/><path d="M6,10 C18,-45 35,-95 55,-145"/>
-              </g>
               <path d="M0,10 C-3,-55 -6,-120 -14,-175" fill="none" stroke="url(#gradRaya)" stroke-width="7" stroke-linecap="round"/>
               <path d="M-42,-5 C-50,-60 -62,-115 -78,-160" fill="none" stroke="url(#gradRaya)" stroke-width="5" stroke-linecap="round" opacity=".85"/>
               <path d="M42,-5 C50,-60 62,-115 78,-160" fill="none" stroke="url(#gradRaya)" stroke-width="5" stroke-linecap="round" opacity=".85"/>
-              <g fill="#c23b6a">
+              <g fill="#8a1638">
                 <ellipse class="peca" cx="-6" cy="-15" rx="2.4" ry="3.2" transform="rotate(-10 -6 -15)"/><ellipse class="peca" cx="9" cy="-22" rx="2" ry="2.8" transform="rotate(15 9 -22)"/>
                 <ellipse class="peca" cx="-16" cy="-30" rx="2.3" ry="3" transform="rotate(-25 -16 -30)"/><ellipse class="peca" cx="15" cy="-38" rx="1.9" ry="2.6" transform="rotate(20 15 -38)"/>
-                <ellipse class="peca" cx="-3" cy="-45" rx="2.1" ry="2.9"/><ellipse class="peca" cx="-28" cy="-25" rx="2" ry="2.7" transform="rotate(-15 -28 -25)"/>
-                <ellipse class="peca" cx="30" cy="-22" rx="2" ry="2.7" transform="rotate(15 30 -22)"/><ellipse class="peca" cx="0" cy="-65" rx="1.6" ry="2.2"/>
-                <ellipse class="peca" cx="-38" cy="-45" rx="1.5" ry="2"/><ellipse class="peca" cx="40" cy="-42" rx="1.5" ry="2"/>
+                <ellipse class="peca" cx="-3" cy="-45" rx="2.1" ry="2.9"/><ellipse class="peca" cx="0" cy="-65" rx="1.6" ry="2.2"/>
               </g>
               <path d="M-15,18 C-11,-18 11,-18 15,18 C7,28 -7,28 -15,18 Z" fill="#eefabb" opacity=".95"/>
               <line x1="0" y1="8" x2="0" y2="-115" stroke="#a9d69a" stroke-width="3" stroke-linecap="round"/>
-              <g fill="#8fb87a"><ellipse cx="-3" cy="-116" rx="3.5" ry="5" transform="rotate(-20 -3 -116)"/><ellipse cx="3" cy="-116" rx="3.5" ry="5" transform="rotate(20 3 -116)"/><ellipse cx="0" cy="-119" rx="3.5" ry="5"/></g>
               <g stroke="#cfe8b8" stroke-width="2.2" fill="none" stroke-linecap="round">
                 <path class="estambre" d="M0,6 C-4,-35 -18,-65 -34,-86"/><path class="estambre" d="M0,6 C4,-36 20,-67 38,-88"/>
-                <path class="estambre" d="M0,6 C-8,-32 -28,-52 -52,-64"/><path class="estambre" d="M0,6 C8,-33 30,-54 56,-64"/>
                 <path class="estambre" d="M0,6 C-2,-40 2,-75 -6,-102"/><path class="estambre" d="M0,6 C2,-40 -2,-75 6,-104"/>
               </g>
               <g fill="#9b2036">
                 <ellipse class="estambre" cx="-34" cy="-86" rx="5" ry="9" transform="rotate(-55 -34 -86)"/><ellipse class="estambre" cx="38" cy="-88" rx="5" ry="9" transform="rotate(55 38 -88)"/>
-                <ellipse class="estambre" cx="-52" cy="-64" rx="4.6" ry="8" transform="rotate(-70 -52 -64)"/><ellipse class="estambre" cx="56" cy="-64" rx="4.6" ry="8" transform="rotate(70 56 -64)"/>
                 <ellipse class="estambre" cx="-6" cy="-102" rx="4.8" ry="8.5" transform="rotate(-12 -6 -102)"/><ellipse class="estambre" cx="6" cy="-104" rx="4.8" ry="8.5" transform="rotate(12 6 -104)"/>
               </g>
             </g>
           </g>
 
-          <!-- ROSA: origen (0,0) en la base, capullo centrado hacia (0,-50) -->
-          <g id="rosa">
+          <!-- ROSA BLANCA -->
+          <g id="rosaBlanca">
             <g filter="url(#sombraFlor)">
-              <line x1="0" y1="0" x2="0" y2="-30" stroke="#4a8f3f" stroke-width="4" stroke-linecap="round"/>
-              <g fill="url(#gradRosaClaro)" stroke="#a8244f" stroke-width="1">
-                <path transform="rotate(0 0 -50)"   d="M0,-50 C-16,-72 -12,-96 0,-104 C12,-96 16,-72 0,-50 Z"/>
-                <path transform="rotate(60 0 -50)"  d="M0,-50 C-16,-72 -12,-96 0,-104 C12,-96 16,-72 0,-50 Z"/>
-                <path transform="rotate(120 0 -50)" d="M0,-50 C-16,-72 -12,-96 0,-104 C12,-96 16,-72 0,-50 Z"/>
-                <path transform="rotate(180 0 -50)" d="M0,-50 C-16,-72 -12,-96 0,-104 C12,-96 16,-72 0,-50 Z"/>
-                <path transform="rotate(240 0 -50)" d="M0,-50 C-16,-72 -12,-96 0,-104 C12,-96 16,-72 0,-50 Z"/>
-                <path transform="rotate(300 0 -50)" d="M0,-50 C-16,-72 -12,-96 0,-104 C12,-96 16,-72 0,-50 Z"/>
+              <line x1="0" y1="0" x2="0" y2="-28" stroke="#4a8f3f" stroke-width="4" stroke-linecap="round"/>
+              <g fill="url(#gradRosaClaro)" stroke="#d9c6ca" stroke-width="1">
+                <path transform="rotate(0 0 -48)" d="M0,-48 C-15,-69 -11,-92 0,-100 C11,-92 15,-69 0,-48 Z"/>
+                <path transform="rotate(60 0 -48)" d="M0,-48 C-15,-69 -11,-92 0,-100 C11,-92 15,-69 0,-48 Z"/>
+                <path transform="rotate(120 0 -48)" d="M0,-48 C-15,-69 -11,-92 0,-100 C11,-92 15,-69 0,-48 Z"/>
+                <path transform="rotate(180 0 -48)" d="M0,-48 C-15,-69 -11,-92 0,-100 C11,-92 15,-69 0,-48 Z"/>
+                <path transform="rotate(240 0 -48)" d="M0,-48 C-15,-69 -11,-92 0,-100 C11,-92 15,-69 0,-48 Z"/>
+                <path transform="rotate(300 0 -48)" d="M0,-48 C-15,-69 -11,-92 0,-100 C11,-92 15,-69 0,-48 Z"/>
               </g>
-              <g fill="url(#gradRosaMedio)" stroke="#8f1c46" stroke-width="1">
-                <path transform="rotate(30 0 -50)"  d="M0,-50 C-10,-66 -8,-82 0,-88 C8,-82 10,-66 0,-50 Z"/>
-                <path transform="rotate(102 0 -50)" d="M0,-50 C-10,-66 -8,-82 0,-88 C8,-82 10,-66 0,-50 Z"/>
-                <path transform="rotate(174 0 -50)" d="M0,-50 C-10,-66 -8,-82 0,-88 C8,-82 10,-66 0,-50 Z"/>
-                <path transform="rotate(246 0 -50)" d="M0,-50 C-10,-66 -8,-82 0,-88 C8,-82 10,-66 0,-50 Z"/>
-                <path transform="rotate(318 0 -50)" d="M0,-50 C-10,-66 -8,-82 0,-88 C8,-82 10,-66 0,-50 Z"/>
+              <g fill="url(#gradRosaMedio)" stroke="#cbb7bb" stroke-width="1">
+                <path transform="rotate(30 0 -48)" d="M0,-48 C-9,-63 -7,-78 0,-84 C7,-78 9,-63 0,-48 Z"/>
+                <path transform="rotate(102 0 -48)" d="M0,-48 C-9,-63 -7,-78 0,-84 C7,-78 9,-63 0,-48 Z"/>
+                <path transform="rotate(174 0 -48)" d="M0,-48 C-9,-63 -7,-78 0,-84 C7,-78 9,-63 0,-48 Z"/>
+                <path transform="rotate(246 0 -48)" d="M0,-48 C-9,-63 -7,-78 0,-84 C7,-78 9,-63 0,-48 Z"/>
+                <path transform="rotate(318 0 -48)" d="M0,-48 C-9,-63 -7,-78 0,-84 C7,-78 9,-63 0,-48 Z"/>
               </g>
-              <path d="M0,-50 C-7,-59 -5,-70 4,-68 C11,-66 9,-57 0,-50 Z" fill="#8a1638" stroke="#5c0d27" stroke-width=".6"/>
-              <path d="M0,-52 C4,-58 8,-62 4,-68 C0,-70 -4,-66 -2,-60 Z" fill="#6e0f2e" opacity=".85"/>
-              <path d="M-30,-95 C-24,-100 -16,-100 -12,-95" fill="none" stroke="#ffe6ef" stroke-width="2" opacity=".55"/>
+              <path d="M0,-48 C-6,-57 -4,-67 4,-65 C10,-63 8,-55 0,-48 Z" fill="#fdf4f0" stroke="#e3d3d6" stroke-width=".5"/>
             </g>
           </g>
 
-          <!-- FLOR PEQUEÑA DE RELLENO: origen (0,0) en la base -->
-          <g id="florRelleno">
-            <line x1="0" y1="0" x2="0" y2="-12" stroke="#5fae4a" stroke-width="2" stroke-linecap="round"/>
-            <g fill="#fff8ec" stroke="#e8dcc0" stroke-width=".5">
-              <ellipse cx="0" cy="-22" rx="4.5" ry="6.5" transform="rotate(0 0 -14)"/>
-              <ellipse cx="0" cy="-22" rx="4.5" ry="6.5" transform="rotate(72 0 -14)"/>
-              <ellipse cx="0" cy="-22" rx="4.5" ry="6.5" transform="rotate(144 0 -14)"/>
-              <ellipse cx="0" cy="-22" rx="4.5" ry="6.5" transform="rotate(216 0 -14)"/>
-              <ellipse cx="0" cy="-22" rx="4.5" ry="6.5" transform="rotate(288 0 -14)"/>
+          <!-- GERBERA NARANJA -->
+          <g id="gerbera">
+            <line x1="0" y1="0" x2="0" y2="-20" stroke="#4a8f3f" stroke-width="4" stroke-linecap="round"/>
+            <g fill="url(#gradGerberaPetalo)" stroke="#c94d0e" stroke-width=".6">
+              <ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(0 0 -20)"/><ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(30 0 -20)"/>
+              <ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(60 0 -20)"/><ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(90 0 -20)"/>
+              <ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(120 0 -20)"/><ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(150 0 -20)"/>
+              <ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(180 0 -20)"/><ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(210 0 -20)"/>
+              <ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(240 0 -20)"/><ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(270 0 -20)"/>
+              <ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(300 0 -20)"/><ellipse cx="0" cy="-46" rx="4" ry="20" transform="rotate(330 0 -20)"/>
             </g>
-            <circle cx="0" cy="-14" r="3" fill="#f6d34a"/>
+            <circle cx="0" cy="-20" r="15" fill="url(#gradGerberaCentro)" stroke="#2b230f" stroke-width=".5"/>
+            <g fill="#2b230f" opacity=".6">
+              <circle cx="-5" cy="-23" r="1"/><circle cx="4" cy="-18" r="1"/><circle cx="-2" cy="-16" r="1"/><circle cx="6" cy="-25" r="1"/>
+            </g>
+          </g>
+
+          <!-- MARGARITA MORADA -->
+          <g id="margarita">
+            <line x1="0" y1="0" x2="0" y2="-14" stroke="#5fae4a" stroke-width="2.5" stroke-linecap="round"/>
+            <g fill="url(#gradMargarita)" stroke="#7d3ba0" stroke-width=".5">
+              <ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(0 0 -16)"/><ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(36 0 -16)"/>
+              <ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(72 0 -16)"/><ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(108 0 -16)"/>
+              <ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(144 0 -16)"/><ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(180 0 -16)"/>
+              <ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(216 0 -16)"/><ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(252 0 -16)"/>
+              <ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(288 0 -16)"/><ellipse cx="0" cy="-28" rx="3.4" ry="12" transform="rotate(324 0 -16)"/>
+            </g>
+            <circle cx="0" cy="-16" r="5" fill="#e9d873"/>
+          </g>
+
+          <!-- CLAVEL ROSA -->
+          <g id="clavel">
+            <line x1="0" y1="0" x2="0" y2="-16" stroke="#5fae4a" stroke-width="3" stroke-linecap="round"/>
+            <g fill="url(#gradClavelClaro)" stroke="#c04a80" stroke-width=".5">
+              <ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(0 0 -22)"/><ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(45 0 -22)"/>
+              <ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(90 0 -22)"/><ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(135 0 -22)"/>
+              <ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(180 0 -22)"/><ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(225 0 -22)"/>
+              <ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(270 0 -22)"/><ellipse cx="0" cy="-34" rx="7" ry="13" transform="rotate(315 0 -22)"/>
+            </g>
+            <g fill="url(#gradClavelOscuro)" stroke="#a01c50" stroke-width=".5">
+              <ellipse cx="0" cy="-28" rx="5" ry="9" transform="rotate(20 0 -20)"/><ellipse cx="0" cy="-28" rx="5" ry="9" transform="rotate(90 0 -20)"/>
+              <ellipse cx="0" cy="-28" rx="5" ry="9" transform="rotate(160 0 -20)"/><ellipse cx="0" cy="-28" rx="5" ry="9" transform="rotate(230 0 -20)"/>
+              <ellipse cx="0" cy="-28" rx="5" ry="9" transform="rotate(300 0 -20)"/>
+            </g>
+          </g>
+
+          <!-- CAPULLO CERRADO -->
+          <g id="capullo">
+            <line x1="0" y1="0" x2="0" y2="-18" stroke="#4a8f3f" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M0,-16 C-7,-30 -8,-55 0,-72 C8,-55 7,-30 0,-16 Z" fill="url(#gradCapullo)" stroke="#3f7a30" stroke-width="1"/>
+            <path d="M0,-20 C-3,-35 -3,-52 0,-64" fill="none" stroke="#c8e6a8" stroke-width="1" opacity=".6"/>
+            <path class="hoja" d="M0,-18 C-16,-20 -22,-10 -10,-8 C-6,-14 -2,-16 0,-18 Z" fill="#5aab4f" stroke="#2f6b2b" stroke-width=".6"/>
           </g>
         </defs>
 
-        <!-- TALLOS: suben desde cada flor, se cruzan levemente y convergen en el lazo -->
+        <!-- TALLOS: van desde cada flor hasta dentro del papel -->
         <g fill="none" stroke="url(#gradTallo)" stroke-width="5.5" stroke-linecap="round">
-          <path class="tallo" d="M140,310 C170,370 220,420 258,478"/>
-          <path class="tallo" d="M300,235 C285,330 265,410 260,478"/>
-          <path class="tallo" d="M410,310 C370,370 300,420 262,478"/>
-          <path class="tallo" d="M210,350 C225,390 245,430 258,478"/>
-          <path class="tallo" d="M350,355 C325,400 285,435 262,478"/>
+          <path class="tallo" d="M190,240 C210,300 245,350 258,420"/>
+          <path class="tallo" d="M330,210 C310,290 275,350 262,420"/>
+          <path class="tallo" d="M150,310 C185,360 220,390 258,425"/>
+          <path class="tallo" d="M270,170 C265,260 260,340 260,420"/>
+          <path class="tallo" d="M170,390 C205,405 235,415 258,428"/>
+          <path class="tallo" d="M250,360 C255,390 258,405 260,425"/>
+          <path class="tallo" d="M330,380 C300,400 275,412 262,428"/>
+          <path class="tallo" d="M380,320 C345,360 300,395 264,425"/>
+          <path class="tallo" d="M300,430 C280,432 268,428 260,425"/>
+          <path class="tallo" d="M270,400 C265,410 262,418 260,425"/>
+          <path class="tallo" d="M230,420 C240,420 250,422 258,425"/>
+          <path class="tallo" d="M200,270 C215,320 235,370 258,420"/>
+          <path class="tallo" d="M350,280 C330,330 300,375 262,420"/>
+          <path class="tallo" d="M280,250 C275,310 268,365 260,420"/>
         </g>
-        <!-- tallos cortados por debajo del lazo, abriéndose en abanico -->
-        <g fill="none" stroke="url(#gradTallo)" stroke-width="5" stroke-linecap="round">
-          <path class="tallo" d="M258,488 C230,540 205,580 188,622"/>
-          <path class="tallo" d="M260,488 C248,545 235,595 228,638"/>
-          <path class="tallo" d="M260,488 C260,545 260,600 260,648"/>
-          <path class="tallo" d="M262,488 C275,545 288,595 294,638"/>
-          <path class="tallo" d="M262,488 C290,540 315,580 332,622"/>
-        </g>
 
-        <!-- HOJAS y ramitas verdes entre las flores -->
-        <path class="hoja" d="M170,360 C100,345 90,300 130,312 C122,332 138,352 170,360 Z" fill="#4f9c46" stroke="#2f6b2b" stroke-width="1"/>
-        <path class="hoja" d="M370,368 C440,352 450,308 410,320 C418,340 402,360 370,368 Z" fill="#5aab4f" stroke="#2f6b2b" stroke-width="1"/>
-        <path class="hoja" d="M255,430 C235,470 240,510 260,470 Z" fill="#5aab4f" stroke="#2f6b2b" stroke-width=".8"/>
+        <!-- HOJAS entre las flores -->
+        <path class="hoja" d="M170,300 C100,285 90,240 130,252 C122,272 138,292 170,300 Z" fill="#4f9c46" stroke="#2f6b2b" stroke-width="1"/>
+        <path class="hoja" d="M370,300 C440,285 450,240 410,252 C418,272 402,292 370,300 Z" fill="#5aab4f" stroke="#2f6b2b" stroke-width="1"/>
+        <path class="hoja" d="M400,340 C460,335 470,300 435,308 C438,325 420,335 400,340 Z" fill="#4f9c46" stroke="#2f6b2b" stroke-width="1"/>
 
-        <!-- FLORES: traseras y pequeñas primero, luego las principales al frente -->
-        <g class="flor-extra"><use href="#florRelleno" transform="translate(90,330) rotate(8) scale(1)"/></g>
-        <g class="flor-extra"><use href="#florRelleno" transform="translate(450,330) rotate(-8) scale(1)"/></g>
-        <g class="flor-extra"><use href="#florRelleno" transform="translate(250,190) scale(.9)"/></g>
-        <g class="flor-extra"><use href="#florRelleno" transform="translate(330,170) rotate(14) scale(.85)"/></g>
-        <g class="flor-extra"><use href="#florRelleno" transform="translate(170,220) rotate(-10) scale(.8)"/></g>
-        <g class="flor-extra"><use href="#florRelleno" transform="translate(390,235) rotate(10) scale(.8)"/></g>
+        <!-- FLORES: capullos y traseras primero, luego las principales -->
+        <g class="flor-extra"><use href="#capullo" transform="translate(200,270) rotate(-15) scale(.85)"/></g>
+        <g class="flor-extra"><use href="#capullo" transform="translate(350,280) rotate(12) scale(.85)"/></g>
+        <g class="flor-extra"><use href="#capullo" transform="translate(280,250) scale(.75)"/></g>
 
-        <use href="#lirio" transform="translate(140,310) rotate(-32) scale(.72)"/>
-        <use href="#lirio" transform="translate(410,310) rotate(26) scale(.7)"/>
-        <g class="flor-extra"><use href="#rosa" transform="translate(210,350) rotate(-14) scale(.95)"/></g>
-        <g class="flor-extra"><use href="#rosa" transform="translate(350,355) rotate(16) scale(.9)"/></g>
-        <use href="#lirio" transform="translate(300,235) rotate(-8) scale(1.05)"/>
+        <g class="flor-extra"><use href="#margarita" transform="translate(250,360) scale(.95)"/></g>
+        <g class="flor-extra"><use href="#margarita" transform="translate(330,380) rotate(8) scale(.9)"/></g>
+        <g class="flor-extra"><use href="#margarita" transform="translate(380,320) rotate(14) scale(.85)"/></g>
+        <g class="flor-extra"><use href="#margarita" transform="translate(300,430) rotate(-4) scale(.9)"/></g>
 
-        <!-- LAZO que une los tallos, ajustado al grosor real del ramo -->
-        <g transform="translate(260,481)">
-        <g class="lazo">
-          <!-- cinta que envuelve el haz de tallos -->
-          <path d="M-46,-13 C-20,-22 20,-22 46,-13 L46,6 C46,15 20,20 0,20 C-20,20 -46,15 -46,6 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.4"/>
-          <path d="M-46,-13 C-20,-22 20,-22 46,-13" fill="none" stroke="#ffd7e6" stroke-width="1.4" opacity=".5"/>
+        <use href="#rosaBlanca" transform="translate(150,310) rotate(-10) scale(.85)"/>
+        <use href="#rosaBlanca" transform="translate(270,170) rotate(6) scale(.8)"/>
 
-          <!-- colas del lazo, cayendo sobre dos de los tallos del abanico -->
-          <path d="M-10,10 C-24,45 -34,85 -50,118 L-30,122 C-18,90 -10,55 4,14 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.1"/>
-          <path d="M10,10 C24,45 34,85 50,118 L30,122 C18,90 10,55 -4,14 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.1"/>
-          <path d="M-32,110 L-50,118 L-38,128 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1"/>
-          <path d="M32,110 L50,118 L38,128 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1"/>
+        <g class="flor-extra"><use href="#clavel" transform="translate(270,400) scale(.85)"/></g>
+        <g class="flor-extra"><use href="#clavel" transform="translate(230,420) rotate(-6) scale(.8)"/></g>
 
-          <!-- lazadas del moño, centradas sobre la cinta -->
-          <path d="M-8,-4 C-40,-30 -62,-14 -46,8 C-34,24 -14,14 -8,-4 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.4"/>
-          <path d="M8,-4 C40,-30 62,-14 46,8 C34,24 14,14 8,-4 Z" fill="url(#gradLazo)" stroke="#8f1c46" stroke-width="1.4"/>
-          <path d="M-32,-16 C-20,-19 -8,-13 -6,-4" fill="none" stroke="#ffe6ef" stroke-width="1.6" opacity=".6"/>
-          <path d="M32,-16 C20,-19 8,-13 6,-4" fill="none" stroke="#ffe6ef" stroke-width="1.6" opacity=".6"/>
+        <g class="flor-extra"><use href="#gerbera" transform="translate(170,390) rotate(-6) scale(1.05)"/></g>
 
-          <!-- nudo central -->
-          <ellipse cx="0" cy="0" rx="11" ry="9" fill="#f06a95" stroke="#8f1c46" stroke-width="1.4"/>
-        </g>
+        <use href="#lirio" transform="translate(190,240) rotate(-20) scale(.85)"/>
+        <use href="#lirio" transform="translate(330,210) rotate(14) scale(.9)"/>
+
+        <!-- PAPEL DE ENVOLVER AMARILLO PÁLIDO -->
+        <g class="papel">
+          <path d="M95,410 C80,485 90,600 250,665 C410,600 420,485 405,410 C355,435 300,442 250,440 C200,442 145,435 95,410 Z" fill="url(#gradPapel)" stroke="#d9c04a" stroke-width="2"/>
+          <path d="M130,415 C115,470 125,555 210,600 C195,540 195,475 205,420 Z" fill="#fffceb" opacity=".55"/>
+          <g fill="#c7ac55" opacity=".45">
+            <circle cx="180" cy="480" r="2.4"/><circle cx="210" cy="520" r="2"/><circle cx="160" cy="540" r="2.2"/>
+            <circle cx="320" cy="480" r="2.4"/><circle cx="290" cy="520" r="2"/><circle cx="335" cy="550" r="2.2"/>
+            <circle cx="250" cy="560" r="2"/><circle cx="230" cy="600" r="1.8"/><circle cx="270" cy="600" r="1.8"/>
+          </g>
+          <g stroke="#c7a83e" stroke-width="1.2" opacity=".4" fill="none">
+            <path d="M135,418 C118,485 128,590 215,650"/>
+            <path d="M250,440 C242,510 246,595 250,662"/>
+            <path d="M365,418 C382,485 372,590 285,650"/>
+          </g>
         </g>
       </svg>
       <div class="titulo-principal">Un ramo para ti 💐</div>
