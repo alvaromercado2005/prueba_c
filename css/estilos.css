@@ -236,6 +236,7 @@ p.subtitulo {
     .tarjeta-regalo p {
         display: block;
     }
+}
     /* --- ESTILOS DE LA CUPONERA --- */
 .tarjeta-cupon {
     background: rgba(255, 255, 255, 0.03);
@@ -384,7 +385,7 @@ p.subtitulo {
     visibility: visible;
     transform: translateY(0);
 }
-    /* --- ADAPTABILIDAD RESPONSIVE PARA MÓVILES --- */
+/* --- ADAPTABILIDAD RESPONSIVE PARA MÓVILES --- */
 @media (max-width: 600px) {
     body {
         padding: 15px;
@@ -417,5 +418,17 @@ p.subtitulo {
         padding: 15px 8px !important;
     }
 }
-    
+/* --- FORZAR CUADRICULA EN LA CUPONERA --- */
+#cuponesGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 columnas en móvil */
+    gap: 15px !important;
+    width: 100%;
+}
+
+@media (min-width: 600px) {
+    #cuponesGrid {
+        grid-template-columns: repeat(4, 1fr) !important; /* 4 columnas en PC */
+    }
+}
 }
