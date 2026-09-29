@@ -98,10 +98,9 @@ p.subtitulo {
     padding: 12px 5px;
     border-radius: 14px;
     backdrop-filter: blur(5px);
-    transition: all 0.3s ease; /* Transición suave para la reacción */
+    transition: all 0.3s ease;
 }
 
-/* Reacción al pasar el ratón por encima de los bloques de tiempo */
 .caja-tiempo:hover {
     transform: translateY(-4px) scale(1.03);
     border-color: var(--accent-pink);
@@ -163,11 +162,10 @@ p.subtitulo {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición súper fluida */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(5px);
 }
 
-/* Reacción al pasar el ratón por encima de las tarjetas de los regalos */
 .tarjeta-regalo:hover {
     transform: translateY(-6px) scale(1.02);
     background: rgba(255, 128, 171, 0.1);
@@ -175,16 +173,14 @@ p.subtitulo {
     box-shadow: 0 8px 25px rgba(255, 128, 171, 0.25);
 }
 
-/* Efecto especial para el icono dentro de la tarjeta al hacer hover */
-.tarjeta-regalo:hover .icono {
-    transform: scale(1.15) rotate(5deg);
-    transition: transform 0.3s ease;
-}
-
 .tarjeta-regalo .icono {
     font-size: 2rem;
     margin-bottom: 10px;
     transition: transform 0.3s ease;
+}
+
+.tarjeta-regalo:hover .icono {
+    transform: scale(1.15) rotate(5deg);
 }
 
 .tarjeta-regalo h3 {
@@ -219,25 +215,15 @@ p.subtitulo {
     transform: translateY(-2px);
 }
 
-
-/* ==========================================================
-   MEDIA QUERIES PARA PANTALLAS MÁS GRANDES (TABLETS Y PC)
-   ================================================---------- */
-@media (min-width: 600px) {
-    .regalos-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-    }
-
-    .tarjeta-regalo {
-        padding: 25px 15px;
-    }
-
-    .tarjeta-regalo p {
-        display: block;
-    }
+/* --- ESTILOS DE LA CUPONERA --- */
+#cuponesGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 30px;
 }
-    /* --- ESTILOS DE LA CUPONERA --- */
+
 .tarjeta-cupon {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--card-border);
@@ -290,21 +276,8 @@ p.subtitulo {
     cursor: not-allowed;
     box-shadow: none;
 }
-/* --- CUADRÍCULA DE CUPONES (EN FILAS) --- */
-#cuponesGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
-    gap: 15px;
-    margin-bottom: 30px;
-}
 
-@media (min-width: 600px) {
-    #cuponesGrid {
-        grid-template-columns: repeat(4, 1fr); /* 4 columnas en pantallas grandes (dos filas de 4 para los 8 cupones) */
-        gap: 18px;
-    }
-}
-/* --- EFECTO CURSOR MÁQUINA DE ESCRIBIR --- */
+/* --- CARTA: EFECTO CURSOR MÁQUINA DE ESCRIBIR --- */
 #textoCarta::after {
     content: '|';
     animation: parpadear 0.8s infinite;
@@ -316,43 +289,10 @@ p.subtitulo {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
 }
-/* --- ESTILO PAPEL REAL PARA LA CARTA --- */
-.papel-carta {
-    background: rgba(255, 255, 255, 0.05); /* Sutil tono translúcido tipo papel */
-    border: 1px solid rgba(255, 128, 171, 0.3);
-    border-radius: 12px;
-    padding: 35px 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px);
-    text-align: left;
-    max-width: 650px;
-    margin: 0 auto 30px auto;
-}
 
-#textoCarta {
-    font-family: 'Playfair Display', serif; /* O puedes cambiarlo si prefieres otra */
-    font-style: italic;                    /* Letra en cursiva */
-    font-size: 1.15rem;
-    line-height: 1.9;
-    color: #fce4ec;
-    white-space: pre-line;
-}
-/* --- ESTILO PAPEL REAL PARA LA CARTA --- */
-/* --- ESTILO PAPEL REAL (BLANCO Y RECTO) --- */
+/* --- CARTA: ESTILO PAPEL KRAFT --- */
 .papel-carta {
-    background: #ffffff; /* Blanco puro como un folio real */
-    border: none;        /* Sin bordes */
-    border-radius: 0px;  /* Sin esquinas redondeadas, recto */
-    padding: 50px 40px;  /* Espacio interior amplio tipo carta */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* Sombra suave para dar profundidad sobre el fondo oscuro */
-    text-align: left;
-    max-width: 650px;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.papel-carta {
-    background: #f2e3c6; /* Color papel kraft claro */
+    background: #f2e3c6;
     border: 1px solid #d9c59e;
     border-radius: 2px;
     padding: 50px 40px;
@@ -360,7 +300,7 @@ p.subtitulo {
     text-align: left;
     max-width: 650px;
     width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 30px auto;
 }
 
 #textoCarta {
@@ -368,11 +308,11 @@ p.subtitulo {
     font-style: italic;
     font-size: 1.15rem;
     line-height: 2;
-    color: #3b2f2f; /* Tono marrón oscuro / tinta café */
+    color: #3b2f2f;
     white-space: pre-line;
 }
 
-/* --- CLASE PARA MOSTRAR EL BOTÓN AL TERMINAR --- */
+/* --- CLASES PARA MOSTRAR EL BOTÓN AL TERMINAR --- */
 .oculto {
     opacity: 0;
     visibility: hidden;
@@ -385,50 +325,61 @@ p.subtitulo {
     visibility: visible;
     transform: translateY(0);
 }
-/* --- ADAPTABILIDAD RESPONSIVE PARA MÓVILES --- */
-@media (max-width: 600px) {
+
+/* ==========================================================
+   PANTALLAS MÁS GRANDES (TABLETS Y PC)
+   ========================================================== */
+@media (min-width: 600px) {
+    .regalos-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .tarjeta-regalo {
+        padding: 25px 15px;
+    }
+
+    .tarjeta-regalo p {
+        display: block;
+    }
+
+    #cuponesGrid {
+        grid-template-columns: repeat(4, 1fr); /* 2 filas de 4 para 8 cupones */
+        gap: 18px;
+    }
+}
+
+/* ==========================================================
+   MÓVILES
+   ========================================================== */
+@media (max-width: 599px) {
     body {
         padding: 15px;
     }
 
-    /* Ajustar contenedores en móvil */
     .container {
-        width: 100% !important;
-        padding: 10px !important;
+        max-width: 100%;
+        padding: 10px;
     }
 
-    /* Carta estilo papel en móvil */
     .papel-carta {
-        padding: 25px 20px !important;
-        margin: 10px;
+        padding: 25px 20px;
+        margin: 10px 0 30px 0;
     }
 
     #textoCarta {
-        font-size: 1rem !important; /* Letra un poco más pequeña para que no desborde */
+        font-size: 1rem;
         line-height: 1.7;
     }
 
-    /* Cuponera: forzar 2 columnas en móvil para que encaje bien */
-    #cuponesGrid, .regalos-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
+    #cuponesGrid,
+    .regalos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
-    .tarjeta-cupon, .tarjeta-regalo {
-        padding: 15px 8px !important;
+    .tarjeta-cupon,
+    .tarjeta-regalo {
+        padding: 15px 8px;
     }
-}
-/* --- FORZAR CUADRICULA EN LA CUPONERA --- */
-#cuponesGrid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* 2 columnas en móvil */
-    gap: 15px !important;
-    width: 100%;
-}
-
-@media (min-width: 600px) {
-    #cuponesGrid {
-        grid-template-columns: repeat(4, 1fr) !important; /* 4 columnas en PC */
-    }
-}
 }
