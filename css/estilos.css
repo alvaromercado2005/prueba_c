@@ -384,4 +384,38 @@ p.subtitulo {
     visibility: visible;
     transform: translateY(0);
 }
+    /* --- ADAPTABILIDAD RESPONSIVE PARA MÓVILES --- */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    /* Ajustar contenedores en móvil */
+    .container {
+        width: 100% !important;
+        padding: 10px !important;
+    }
+
+    /* Carta estilo papel en móvil */
+    .papel-carta {
+        padding: 25px 20px !important;
+        margin: 10px;
+    }
+
+    #textoCarta {
+        font-size: 1rem !important; /* Letra un poco más pequeña para que no desborde */
+        line-height: 1.7;
+    }
+
+    /* Cuponera: forzar 2 columnas en móvil para que encaje bien */
+    #cuponesGrid, .regalos-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .tarjeta-cupon, .tarjeta-regalo {
+        padding: 15px 8px !important;
+    }
+}
+    
 }
