@@ -1,0 +1,387 @@
+/* --- ESTILOS GENERALES Y TEMA OSCURO / NOCHE MÁGICA --- */
+:root {
+    --bg-color: #080810;
+    --card-border: rgba(255, 128, 171, 0.2);
+    --card-hover: rgba(255, 128, 171, 0.15);
+    --accent-pink: #ff80ab;
+    --accent-glow: rgba(233, 30, 99, 0.4);
+    --texto-claro: #ffffff;
+    --texto-secundario: #b0bec5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--texto-claro);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+/* --- CONTENEDOR LIBERADO --- */
+.container {
+    max-width: 80%;
+    width: 100%;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 10px;
+    text-align: center;
+}
+
+/* --- TÍTULOS --- */
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    color: #fff;
+    text-shadow: 0 2px 15px rgba(255, 128, 171, 0.4);
+}
+
+p.subtitulo {
+    font-size: 1rem;
+    color: var(--texto-secundario);
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+/* --- BARRA DE CARGA (INDEX) --- */
+.barra-contenedor {
+    position: relative;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 128, 171, 0.3);
+    border-radius: 20px;
+    height: 26px;
+    padding: 3px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.barra-progreso {
+    height: 100%;
+    background: linear-gradient(135deg, #ff80ab, #e91e63);
+    border-radius: 12px;
+    width: 0%;
+    transition: width 1s ease-in-out;
+}
+
+.porcentaje-texto {
+    font-size: 0.85rem;
+    color: var(--accent-pink);
+    margin-bottom: 35px;
+    font-weight: 600;
+}
+
+/* --- CONTADOR (GRID DE TIEMPO) --- */
+.contador-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.caja-tiempo {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    padding: 12px 5px;
+    border-radius: 14px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease; /* Transición suave para la reacción */
+}
+
+/* Reacción al pasar el ratón por encima de los bloques de tiempo */
+.caja-tiempo:hover {
+    transform: translateY(-4px) scale(1.03);
+    border-color: var(--accent-pink);
+    background: rgba(255, 128, 171, 0.08);
+    box-shadow: 0 5px 15px rgba(255, 128, 171, 0.2);
+}
+
+.caja-tiempo span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent-pink);
+    font-family: 'Playfair Display', serif;
+}
+
+.caja-tiempo label {
+    font-size: 0.65rem;
+    color: #90a4ae;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- BOTÓN DE ACCESO / PRINCIPAL --- */
+.btn-entrar {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff80ab, #e91e63);
+    color: white;
+    padding: 14px 35px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    transition: all 0.3s ease;
+}
+
+.btn-entrar:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(233, 30, 99, 0.7);
+    filter: brightness(1.1);
+}
+
+/* --- GRID DE LOS 6 REGALOS (MENU.HTML) --- */
+.regalos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.tarjeta-regalo {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 22px 12px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición súper fluida */
+    backdrop-filter: blur(5px);
+}
+
+/* Reacción al pasar el ratón por encima de las tarjetas de los regalos */
+.tarjeta-regalo:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: rgba(255, 128, 171, 0.1);
+    border-color: var(--accent-pink);
+    box-shadow: 0 8px 25px rgba(255, 128, 171, 0.25);
+}
+
+/* Efecto especial para el icono dentro de la tarjeta al hacer hover */
+.tarjeta-regalo:hover .icono {
+    transform: scale(1.15) rotate(5deg);
+    transition: transform 0.3s ease;
+}
+
+.tarjeta-regalo .icono {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.tarjeta-regalo h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--accent-pink);
+}
+
+.tarjeta-regalo p {
+    font-size: 0.75rem;
+    color: var(--texto-secundario);
+    display: none;
+}
+
+/* --- BOTÓN VOLVER --- */
+.btn-volver {
+    display: inline-block;
+    color: var(--texto-secundario);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 25px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+    color: white;
+    border-color: var(--accent-pink);
+    background: rgba(255, 128, 171, 0.1);
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================================
+   MEDIA QUERIES PARA PANTALLAS MÁS GRANDES (TABLETS Y PC)
+   ================================================---------- */
+@media (min-width: 600px) {
+    .regalos-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .tarjeta-regalo {
+        padding: 25px 15px;
+    }
+
+    .tarjeta-regalo p {
+        display: block;
+    }
+    /* --- ESTILOS DE LA CUPONERA --- */
+.tarjeta-cupon {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(5px);
+}
+
+.tarjeta-cupon:hover:not(.gastado) {
+    transform: translateY(-5px);
+    background: rgba(255, 128, 171, 0.08);
+    border-color: var(--accent-pink);
+    box-shadow: 0 8px 20px rgba(255, 128, 171, 0.2);
+}
+
+.tarjeta-cupon.gastado {
+    opacity: 0.35;
+    filter: grayscale(0.5);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn-canjear {
+    background: linear-gradient(135deg, #ff80ab, #e91e63);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+}
+
+.btn-canjear:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.5);
+}
+
+.tarjeta-cupon.gastado .btn-canjear {
+    background: transparent;
+    color: var(--texto-secundario);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+/* --- CUADRÍCULA DE CUPONES (EN FILAS) --- */
+#cuponesGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+@media (min-width: 600px) {
+    #cuponesGrid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columnas en pantallas grandes (dos filas de 4 para los 8 cupones) */
+        gap: 18px;
+    }
+}
+/* --- EFECTO CURSOR MÁQUINA DE ESCRIBIR --- */
+#textoCarta::after {
+    content: '|';
+    animation: parpadear 0.8s infinite;
+    color: var(--accent-pink);
+    font-weight: bold;
+}
+
+@keyframes parpadear {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+/* --- ESTILO PAPEL REAL PARA LA CARTA --- */
+.papel-carta {
+    background: rgba(255, 255, 255, 0.05); /* Sutil tono translúcido tipo papel */
+    border: 1px solid rgba(255, 128, 171, 0.3);
+    border-radius: 12px;
+    padding: 35px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    text-align: left;
+    max-width: 650px;
+    margin: 0 auto 30px auto;
+}
+
+#textoCarta {
+    font-family: 'Playfair Display', serif; /* O puedes cambiarlo si prefieres otra */
+    font-style: italic;                    /* Letra en cursiva */
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: #fce4ec;
+    white-space: pre-line;
+}
+/* --- ESTILO PAPEL REAL PARA LA CARTA --- */
+/* --- ESTILO PAPEL REAL (BLANCO Y RECTO) --- */
+.papel-carta {
+    background: #ffffff; /* Blanco puro como un folio real */
+    border: none;        /* Sin bordes */
+    border-radius: 0px;  /* Sin esquinas redondeadas, recto */
+    padding: 50px 40px;  /* Espacio interior amplio tipo carta */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* Sombra suave para dar profundidad sobre el fondo oscuro */
+    text-align: left;
+    max-width: 650px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.papel-carta {
+    background: #f2e3c6; /* Color papel kraft claro */
+    border: 1px solid #d9c59e;
+    border-radius: 2px;
+    padding: 50px 40px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(186, 155, 110, 0.15);
+    text-align: left;
+    max-width: 650px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#textoCarta {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #3b2f2f; /* Tono marrón oscuro / tinta café */
+    white-space: pre-line;
+}
+
+/* --- CLASE PARA MOSTRAR EL BOTÓN AL TERMINAR --- */
+.oculto {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+}
