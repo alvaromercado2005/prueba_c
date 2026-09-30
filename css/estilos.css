@@ -1,4 +1,6 @@
-/* --- ESTILOS GENERALES Y TEMA OSCURO / NOCHE MÁGICA --- */
+/* ==========================================================
+   ESTILOS GENERALES Y TEMA OSCURO / NOCHE MÁGICA
+   ========================================================== */
 :root {
     --bg-color: #080810;
     --card-border: rgba(255, 128, 171, 0.2);
@@ -143,7 +145,28 @@ p.subtitulo {
     filter: brightness(1.1);
 }
 
-/* --- GRID DE LOS 6 REGALOS (MENU.HTML) --- */
+/* --- BOTÓN VOLVER --- */
+.btn-volver {
+    display: inline-block;
+    color: var(--texto-secundario);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 25px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+    color: white;
+    border-color: var(--accent-pink);
+    background: rgba(255, 128, 171, 0.1);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================
+   MENÚ: GRID DE LOS 6 REGALOS (MENU.HTML)
+   ========================================================== */
 .regalos-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -156,6 +179,7 @@ p.subtitulo {
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 22px 12px;
+    min-height: 150px; /* evita que la tarjeta cambie de tamaño al abrirse */
     text-decoration: none;
     color: white;
     display: flex;
@@ -196,26 +220,79 @@ p.subtitulo {
     display: none;
 }
 
-/* --- BOTÓN VOLVER --- */
-.btn-volver {
-    display: inline-block;
+/* --- REGALOS QUE SE ABREN --- */
+.tarjeta-regalo.cerrado {
+    cursor: pointer;
+}
+
+.envoltorio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.envoltorio .caja {
+    font-size: 2.8rem;
+    animation: flotar 2.5s ease-in-out infinite;
+}
+
+.envoltorio small {
+    font-size: 0.7rem;
     color: var(--texto-secundario);
-    text-decoration: none;
-    font-size: 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 10px 25px;
+    margin-top: 8px;
+}
+
+.contenido {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tarjeta-regalo.abierto .envoltorio {
+    display: none;
+}
+
+.tarjeta-regalo.abierto .contenido {
+    display: flex;
+    animation: aparecer 0.6s ease;
+}
+
+.tarjeta-regalo.abriendo .caja {
+    animation: sacudir 0.6s ease;
+}
+
+.mini-btn {
+    margin-top: 10px;
+    padding: 6px 16px;
     border-radius: 20px;
-    transition: all 0.3s ease;
-}
-
-.btn-volver:hover {
+    font-size: 0.75rem;
+    font-weight: 600;
     color: white;
-    border-color: var(--accent-pink);
-    background: rgba(255, 128, 171, 0.1);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #ff80ab, #e91e63);
+    box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
 }
 
-/* --- ESTILOS DE LA CUPONERA --- */
+@keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+@keyframes sacudir {
+    0%, 100% { transform: rotate(0) scale(1); }
+    20% { transform: rotate(-12deg) scale(1.15); }
+    40% { transform: rotate(12deg) scale(1.2); }
+    60% { transform: rotate(-8deg) scale(1.25); }
+    80% { transform: rotate(8deg) scale(1.3); opacity: 0.6; }
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================
+   CUPONERA
+   ========================================================== */
 #cuponesGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
@@ -277,7 +354,9 @@ p.subtitulo {
     box-shadow: none;
 }
 
-/* --- CARTA: EFECTO CURSOR MÁQUINA DE ESCRIBIR --- */
+/* ==========================================================
+   CARTA
+   ========================================================== */
 #textoCarta::after {
     content: '|';
     animation: parpadear 0.8s infinite;
@@ -290,7 +369,6 @@ p.subtitulo {
     50% { opacity: 0; }
 }
 
-/* --- CARTA: ESTILO PAPEL KRAFT --- */
 .papel-carta {
     background: #f2e3c6;
     border: 1px solid #d9c59e;
@@ -325,7 +403,10 @@ p.subtitulo {
     visibility: visible;
     transform: translateY(0);
 }
-/* --- GALERÍA ESTILO POLAROID (añadir a estilos.css, antes de los @media) --- */
+
+/* ==========================================================
+   GALERÍA ESTILO POLAROID
+   ========================================================== */
 .galeria-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -466,6 +547,7 @@ p.subtitulo {
     background: rgba(255, 128, 171, 0.3);
     transform: scale(1.1);
 }
+
 /* ==========================================================
    PANTALLAS MÁS GRANDES (TABLETS Y PC)
    ========================================================== */
@@ -522,78 +604,4 @@ p.subtitulo {
     .tarjeta-regalo {
         padding: 15px 8px;
     }
-    /* --- REGALOS QUE SE ABREN (añadir al final de estilos.css, antes de los @media) --- */
-.tarjeta-regalo {
-    min-height: 150px; /* evita que la tarjeta cambie de tamaño al abrirse */
-}
-
-.tarjeta-regalo.cerrado {
-    cursor: pointer;
-}
-
-.envoltorio {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.envoltorio .caja {
-    font-size: 2.8rem;
-    animation: flotar 2.5s ease-in-out infinite;
-}
-
-.envoltorio small {
-    font-size: 0.7rem;
-    color: var(--texto-secundario);
-    margin-top: 8px;
-}
-
-.contenido {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tarjeta-regalo.abierto .envoltorio {
-    display: none;
-}
-
-.tarjeta-regalo.abierto .contenido {
-    display: flex;
-    animation: aparecer 0.6s ease;
-}
-
-.tarjeta-regalo.abriendo .caja {
-    animation: sacudir 0.6s ease;
-}
-
-.mini-btn {
-    margin-top: 10px;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-    background: linear-gradient(135deg, #ff80ab, #e91e63);
-    box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
-}
-
-@keyframes flotar {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-}
-
-@keyframes sacudir {
-    0%, 100% { transform: rotate(0) scale(1); }
-    20% { transform: rotate(-12deg) scale(1.15); }
-    40% { transform: rotate(12deg) scale(1.2); }
-    60% { transform: rotate(-8deg) scale(1.25); }
-    80% { transform: rotate(8deg) scale(1.3); opacity: 0.6; }
-}
-
-@keyframes aparecer {
-    from { opacity: 0; transform: scale(0.7); }
-    to { opacity: 1; transform: scale(1); }
-}
-
 }
