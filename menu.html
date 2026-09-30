@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tus Regalos 💖</title>
-    <!-- Enlace al CSS global compartido -->
     <link rel="stylesheet" href="css/estilos.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
@@ -12,49 +11,138 @@
 
     <div class="container">
         <h1>Elige tu sorpresa</h1>
-        <p class="subtitulo">Cada rincón está preparado con todo mi amor para ti</p>
+        <p class="subtitulo">Toca cada regalo para abrirlo 🎁</p>
 
-        <!-- Menú con los 6 enlaces a los regalos -->
         <div class="regalos-grid">
-            <a href="regalos/flores.html" class="tarjeta-regalo">
-                <span class="icono">🌸</span>
-                <h3>Ramo de Flores</h3>
-                <p>Un detalle floral especial</p>
+
+            <a href="regalos/flores.html" class="tarjeta-regalo cerrado" data-id="flores">
+                <div class="envoltorio">
+                    <span class="caja">🎁</span>
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">🌸</span>
+                    <h3>Ramo de Flores</h3>
+                    <p>Un detalle floral especial</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
             </a>
 
-            <a href="regalos/fotos.html" class="tarjeta-regalo">
-                <span class="icono">📸</span>
-                <h3>Nuestros Recuerdos</h3>
-                <p>Nuestra galería de fotos</p>
+            <a href="regalos/fotos.html" class="tarjeta-regalo cerrado" data-id="fotos">
+                <div class="envoltorio">
+                    <span class="caja">🎁</span>
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">📸</span>
+                    <h3>Nuestros Recuerdos</h3>
+                    <p>Nuestra galería de fotos</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
             </a>
 
-            <a href="regalos/carta.html" class="tarjeta-regalo">
-                <span class="icono">💌</span>
-                <h3>Carta Abierta</h3>
-                <p>Palabras directas al corazón</p>
+            <a href="regalos/carta.html" class="tarjeta-regalo cerrado" data-id="carta">
+                <div class="envoltorio">
+                    <span class="caja">🎁</span>
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">💌</span>
+                    <h3>Carta Abierta</h3>
+                    <p>Palabras directas al corazón</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
             </a>
 
-            <a href="regalos/cuponera.html" class="tarjeta-regalo">
-                <span class="icono">🎟️</span>
-                <h3>Cuponera de Vales</h3>
-                <p>Canjeables por momentos únicos</p>
+            <a href="regalos/cuponera.html" class="tarjeta-regalo cerrado" data-id="cuponera">
+                <div class="envoltorio">
+                    <span class="caja">🎁</span>
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">🎟️</span>
+                    <h3>Cuponera de Vales</h3>
+                    <p>Canjeables por momentos únicos</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
             </a>
 
-            <a href="regalos/razones.html" class="tarjeta-regalo">
-                <span class="icono">✨</span>
-                <h3>Razones para Amarte</h3>
-                <p>Todo lo que amo de ti</p>
+            <a href="regalos/razones.html" class="tarjeta-regalo cerrado" data-id="razones">
+                <div class="envoltorio">
+                    <span class="caja">🎁</span>
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">✨</span>
+                    <h3>Razones para Amarte</h3>
+                    <p>Todo lo que amo de ti</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
             </a>
 
-            <a href="regalos/musica.html" class="tarjeta-regalo">
-                <span class="icono">🎶</span>
-                <h3>Nuestra Playlist</h3>
-                <p>Las canciones de nuestra historia</p>
+            <a href="regalos/musica.html" class="tarjeta-regalo cerrado" data-id="musica">
+                <div class="envoltorio">
+                    <span class="caja">🎁</span>
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">🎶</span>
+                    <h3>Nuestra Playlist</h3>
+                    <p>Las canciones de nuestra historia</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
             </a>
+
         </div>
 
         <a href="index.html" class="btn-volver">← Volver al inicio</a>
     </div>
+
+    <script>
+        const CLAVE = 'regalosAbiertos';
+        const tarjetas = document.querySelectorAll('.tarjeta-regalo');
+
+        function leerAbiertos() {
+            try {
+                return JSON.parse(localStorage.getItem(CLAVE)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function guardarAbierto(id) {
+            try {
+                const abiertos = leerAbiertos();
+                if (!abiertos.includes(id)) {
+                    abiertos.push(id);
+                    localStorage.setItem(CLAVE, JSON.stringify(abiertos));
+                }
+            } catch (e) { /* si falla el guardado, no pasa nada */ }
+        }
+
+        // Al cargar: dejar abiertos los que ya se descubrieron
+        const yaAbiertos = leerAbiertos();
+        tarjetas.forEach(t => {
+            if (yaAbiertos.includes(t.dataset.id)) {
+                t.classList.remove('cerrado');
+                t.classList.add('abierto');
+            }
+        });
+
+        // Al tocar un regalo cerrado: se abre en lugar de navegar
+        tarjetas.forEach(t => {
+            t.addEventListener('click', e => {
+                if (!t.classList.contains('cerrado')) return; // ya abierto: navega normal
+                e.preventDefault();
+                t.classList.add('abriendo');
+                setTimeout(() => {
+                    t.classList.remove('cerrado', 'abriendo');
+                    t.classList.add('abierto');
+                    guardarAbierto(t.dataset.id);
+                }, 600);
+            });
+        });
+    </script>
 
 </body>
 </html>

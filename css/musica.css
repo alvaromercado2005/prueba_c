@@ -1,0 +1,287 @@
+/* ================== PÁGINA DE MÚSICA ================== */
+body {
+    justify-content: flex-start;
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+.container-musica {
+    max-width: 620px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* --- Notas flotando de fondo --- */
+.nota-flotante {
+    position: fixed;
+    bottom: -40px;
+    color: var(--accent-pink);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    animation: subirNota linear forwards;
+}
+
+@keyframes subirNota {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.25; }
+    100% { transform: translateY(-105vh) rotate(25deg); opacity: 0; }
+}
+
+/* --- Escenario: vinilo + ecualizador --- */
+.escenario {
+    position: relative;
+    margin: 10px auto 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.halo {
+    position: absolute;
+    top: 0;
+    width: min(70vw, 280px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(233, 30, 99, 0.35), transparent 70%);
+    filter: blur(20px);
+    opacity: 0.4;
+    transition: opacity 0.6s ease;
+}
+
+.escenario.sonando .halo {
+    opacity: 1;
+    animation: latido 1.6s ease-in-out infinite;
+}
+
+@keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.12); }
+}
+
+.vinilo {
+    position: relative;
+    width: min(60vw, 240px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        conic-gradient(from 0deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.14) 12%,
+            rgba(255, 255, 255, 0) 25%,
+            rgba(255, 255, 255, 0.14) 62%,
+            rgba(255, 255, 255, 0) 75%),
+        repeating-radial-gradient(circle, #0c0c0c 0 2px, #1a1a1a 2px 4px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 128, 171, 0.25);
+    animation: girar 5s linear infinite;
+    animation-play-state: paused;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.escenario.sonando .vinilo {
+    animation-play-state: running;
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+.vinilo-etiqueta {
+    width: 36%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff80ab, #e91e63);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    position: relative;
+}
+
+.vinilo-etiqueta::after {
+    content: '';
+    position: absolute;
+    width: 12%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--bg-color);
+}
+
+.vinilo-etiqueta span {
+    position: relative;
+    top: -18%;
+    z-index: 2;
+}
+
+/* --- Ecualizador --- */
+.ecualizador {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    height: 38px;
+    margin-top: 22px;
+}
+
+.ecualizador span {
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to top, #e91e63, #ff80ab);
+    transition: height 0.4s ease;
+}
+
+.escenario.sonando .ecualizador span {
+    animation: rebotar 0.9s ease-in-out infinite;
+}
+
+.ecualizador span:nth-child(1) { animation-delay: 0s; }
+.ecualizador span:nth-child(2) { animation-delay: 0.15s; }
+.ecualizador span:nth-child(3) { animation-delay: 0.3s; }
+.ecualizador span:nth-child(4) { animation-delay: 0.1s; }
+.ecualizador span:nth-child(5) { animation-delay: 0.4s; }
+.ecualizador span:nth-child(6) { animation-delay: 0.2s; }
+.ecualizador span:nth-child(7) { animation-delay: 0.35s; }
+
+@keyframes rebotar {
+    0%, 100% { height: 6px; }
+    50%      { height: 36px; }
+}
+
+.estado-texto {
+    margin-top: 12px;
+    font-family: 'Caveat', 'Playfair Display', cursive;
+    font-size: 1.3rem;
+    color: var(--accent-pink);
+    min-height: 1.6em;
+}
+
+/* --- Tarjeta del reproductor --- */
+.spotify-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 40px;
+    transition: all 0.3s ease;
+}
+
+.spotify-card:hover {
+    border-color: var(--accent-pink);
+    box-shadow: 0 15px 35px rgba(255, 128, 171, 0.2);
+}
+
+.spotify-card iframe {
+    border-radius: 12px;
+    display: block;
+}
+
+/* --- Canciones con historia --- */
+.titulo-seccion {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+}
+
+.subtitulo-seccion {
+    color: var(--texto-secundario);
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin-bottom: 22px;
+}
+
+.lista-canciones {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 35px;
+    text-align: left;
+}
+
+.cancion {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.3s ease, background 0.3s ease;
+}
+
+.cancion.vista {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cancion:hover {
+    border-color: var(--accent-pink);
+    background: rgba(255, 128, 171, 0.07);
+}
+
+.cancion.especial {
+    border-color: var(--accent-pink);
+    background: rgba(255, 128, 171, 0.08);
+    box-shadow: 0 0 25px rgba(233, 30, 99, 0.2);
+}
+
+.cancion-num {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff80ab, #e91e63);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.cancion-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-pink);
+}
+
+.cancion-info .artista {
+    font-size: 0.78rem;
+    color: var(--texto-secundario);
+    margin-bottom: 8px;
+}
+
+.cancion-info .historia {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #fce4ec;
+}
+
+.etiqueta-especial {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(255, 128, 171, 0.2);
+    color: var(--accent-pink);
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vinilo, .halo, .ecualizador span, .nota-flotante { animation: none !important; }
+    .cancion { transition: none; opacity: 1; transform: none; }
+}

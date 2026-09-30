@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Playlist 🎶</title>
+    <link rel="stylesheet" href="../css/estilos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/musica.css">
+</head>
+<body>
+
+    <div class="container-musica">
+        <h1>Nuestra Banda Sonora 🎶</h1>
+        <p class="subtitulo">Las canciones que marcan cada momento a tu lado</p>
+
+        <!-- Vinilo + ecualizador (se animan cuando suena la música) -->
+        <div class="escenario" id="escenario">
+            <div class="halo"></div>
+            <div class="vinilo">
+                <div class="vinilo-etiqueta"><span>💖</span></div>
+            </div>
+            <div class="ecualizador">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p class="estado-texto" id="estadoTexto">Dale al play y deja que suene ▶</p>
+        </div>
+
+        <!-- Reproductor de Spotify -->
+        <div class="spotify-card">
+            <div id="spotify-player"></div>
+        </div>
+
+        <!-- Canciones con historia -->
+        <h2 class="titulo-seccion">Canciones con historia</h2>
+        <p class="subtitulo-seccion">Cada una guarda un momento nuestro</p>
+        <div class="lista-canciones" id="listaCanciones"></div>
+
+        <a href="../menu.html" class="btn-volver">← Volver al menú</a>
+    </div>
+
+    <script src="../js/musica.js"></script>
+
+</body>
+</html>
