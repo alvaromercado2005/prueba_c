@@ -1,12 +1,6 @@
-const mensajeCarta = `Mi amor,
+const mensajeCarta = `Mi amor lo primero de todo voy ha echar estos tres días mucho de menos sobretodo esos buenos días y buenas noches pero seguiré dándotelos aunque no los puedas ver , también felicidades por nuestros dos meses de los cuales quedan muchísimos más ( lee la carta ajajjajaja), te quiero decir también que espero que disfrutes mucho con los chicos a las fiestas que vayáis también los dibujos que hagas y que  se solucione lo de la Peña lo antes posible, también disfruta mucho de las prefiestas bebé mucho y sobretodo ríete muchoooo, quiero decirte que voy a hacerte muchas fotos para enseñártelas y contarte las historias graciosas que me pasen , lo que te quiero decir también es que estos tres días se te van a pasar volando y en nada estamos en llamada y contándote historias graciosas.
 
-Desde el primer momento en que cruzamos caminos, supe que mi vida iba a cambiar para siempre. Cada día a tu lado es un regalo, una aventura y la prueba más bonita de lo que significa querer de verdad. 
-
-Quería escribirte estas palabras para recordarte lo muchísimo que te amo, lo orgulloso que estoy de ti y lo feliz que me hace saber que compartimos este camino juntos. 
-
-Feliz cumpleaños, mi vida. Esto es solo un pequeño detalle de todo lo que te mereces hoy y siempre.
-
-Te quiero con todo mi corazón. 💖`;
+TE QUIERO MUCHIMO Y ERES LA MEJOR DEL MUNDO MI RUBIA 🤍🤍🤍🤍🤍`;
 
 document.addEventListener("DOMContentLoaded", () => {
     const elementoTexto = document.getElementById("textoCarta");
