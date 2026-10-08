@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lirio</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap">
 <style>
 :root{--bg1:#eaf3fc;--bg2:#bcd7f1;--ink:#1f3550;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -19,14 +19,194 @@ canvas:active{cursor:grabbing}
 button{font:inherit;font-size:.95rem;color:var(--ink);background:transparent;border:1px solid currentColor;border-radius:999px;padding:6px 16px;cursor:pointer;opacity:.7}
 button[aria-pressed="true"]{opacity:1;background:var(--ink);color:var(--bg1)}
 button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-/* --- Botón volver al menú (mismo estilo que .btn-volver de css/estilos.css) --- */
-.btn-volver{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:10;font-family:'Montserrat',sans-serif;font-size:.9rem;color:#5a7491;text-decoration:none;background:rgba(255,255,255,.75);border:1px solid rgba(59,130,196,.3);padding:10px 25px;border-radius:20px;backdrop-filter:blur(5px);transition:all .3s ease}
-.btn-volver:hover{color:#2f6db5;border-color:#2f6db5;background:rgba(255,255,255,.9);transform:translateX(-50%) translateY(-2px)}
+/* ===== Intro antes del ramo ===== */
+#intro{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 50% 45%,#2b0a1d 0%,#16050f 45%,#050104 80%,#000 100%);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;outline:none;transition:opacity 2.5s ease}
+#intro.fuera{opacity:0;pointer-events:none}
+#intro.rapido{transition-duration:1.4s}
+#petalos{position:fixed;inset:0;width:100%;height:100%;z-index:55;pointer-events:none;transition:opacity 3s ease}
+.intro-abrir{text-align:center;padding:0 24px;transition:opacity 1s ease,transform 1s ease}
+.intro-abrir.fuera{opacity:0;transform:translateY(-12px)}
+.intro-abrir p{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.9rem,8vw,2.7rem);color:#F3E9D2;animation:latir 3.2s ease-in-out infinite}
+@keyframes latir{0%,100%{opacity:.8;text-shadow:0 0 6px rgba(243,233,210,.2),0 0 16px rgba(243,233,210,.08)}50%{opacity:1;text-shadow:0 0 12px rgba(243,233,210,.6),0 0 32px rgba(244,167,185,.35)}}
+.intro-flor{display:block;width:28px;height:28px;margin:16px auto 0;opacity:.8}
+.intro-texto{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);padding:0 28px;text-align:center;pointer-events:none}
+.intro-linea{margin:0 auto .4em;max-width:560px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.4rem,6vw,2.1rem);line-height:1.4;color:#F3E9D2;text-shadow:0 0 14px rgba(243,233,210,.22);opacity:0;transform:translateY(14px);transition:opacity 1.8s ease,transform 1.8s ease}
+.intro-linea.ver{opacity:1;transform:none}
+.intro-fecha{margin-top:1.5em;font-size:clamp(.95rem,3.8vw,1.15rem);letter-spacing:.3em}
+.intro-fecha.ver{opacity:.75}
+/* --- Controles: sonido y volver al menú --- */
+.ctrl{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));z-index:70;opacity:0;pointer-events:none;transition:opacity 1s ease,color .8s ease,background .8s ease,border-color .8s ease;-webkit-tap-highlight-color:transparent}
+.ctrl.ver{opacity:.85;pointer-events:auto}
+.ctrl.ver:hover{opacity:1}
+#btnSonido{right:14px;width:40px;height:40px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#F3E9D2;background:rgba(255,255,255,.08);border:1px solid rgba(243,233,210,.35);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#btnSonido svg{width:20px;height:20px}
+#btnSonido .on-x{display:none}
+#btnSonido[aria-pressed="true"] .on-x{display:inline}
+#btnSonido[aria-pressed="true"] .on-ondas{display:none}
+#btnMenu{left:14px;font-family:'Montserrat',sans-serif;font-size:.85rem;padding:8px 15px;border-radius:999px;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.6);border:1px solid rgba(31,53,80,.2);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);border-color:rgba(31,53,80,.2)}
 </style>
 </head>
 <body>
 <canvas id="c" aria-label="Lirio en 3D"></canvas>
-<a href="../menu.html" class="btn-volver">← Volver al menú</a>
+<div id="intro" role="button" tabindex="0" aria-label="Toca para abrir">
+  <div class="intro-abrir">
+    <p>Toca para abrir</p>
+    <svg class="intro-flor" viewBox="0 0 24 24" aria-hidden="true"><g fill="#F3E9D2" opacity=".85"><ellipse cx="12" cy="6.6" rx="3" ry="4.8"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(72 12 12)"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(144 12 12)"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(216 12 12)"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(288 12 12)"/></g><circle cx="12" cy="12" r="2.4" fill="#f4a7b9"/></svg>
+  </div>
+  <div class="intro-texto" aria-live="polite">
+    <p class="intro-linea">Llevabas mucho, mucho tiempo sin verlo…</p>
+    <p class="intro-linea">pero desde hoy podrás verlo para siempre,</p>
+    <p class="intro-linea">como el primer día.</p>
+    <p class="intro-linea intro-fecha">29 · 06 · 2026</p>
+  </div>
+</div>
+<canvas id="petalos" aria-hidden="true"></canvas>
+<audio id="cancion" src="../fotos/cancion.mp3" preload="auto"></audio>
+<button id="btnSonido" class="ctrl" type="button" aria-label="Silenciar música" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="on-ondas" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="on-x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+<a id="btnMenu" class="ctrl" href="../menu.html">‹ Menú</a>
+<script>
+// ===== Intro antes del ramo: pétalos, texto, música y transición =====
+(function(){
+  const T2=Math.PI*2;
+  const intro=document.getElementById('intro'),abrir=intro.querySelector('.intro-abrir');
+  const lineas=[...intro.querySelectorAll('.intro-linea')];
+  const btnS=document.getElementById('btnSonido'),btnM=document.getElementById('btnMenu');
+  const pc=document.getElementById('petalos'),ctx=pc.getContext('2d');
+  const reduceI=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Pétalos cayendo ----------
+  let W=0,H=0;
+  function tam(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;pc.width=W*d;pc.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+  addEventListener('resize',tam);tam();
+  const COLS=['#f4a7b9','#f7c6d1','#ec8fa8','#F3E9D2','#fbefe2'];
+  let recicla=true,vivos=true;
+  function nuevo(p,arriba){
+    p.x0=Math.random()*W;p.y=arriba?-20-Math.random()*H*0.25:Math.random()*H;
+    p.s=8+Math.random()*9;p.v=16+Math.random()*24;p.amp=14+Math.random()*30;p.f=0.25+Math.random()*0.45;
+    p.ph=Math.random()*T2;p.rot=Math.random()*T2;p.vr=(Math.random()-0.5)*1.1;p.fl=Math.random()*T2;p.vf=0.8+Math.random()*1.4;
+    p.c=COLS[Math.floor(Math.random()*COLS.length)];p.a=0.4+Math.random()*0.35;p.dead=false;return p;
+  }
+  const pet=[];for(let i=0;i<18;i++)pet.push(nuevo({},false));
+  function petalo(p){
+    const w=p.s*0.55,h=p.s;
+    ctx.save();ctx.translate(p.x0+Math.sin(p.ph)*p.amp,p.y);ctx.rotate(p.rot);
+    ctx.scale(Math.max(0.15,Math.abs(Math.cos(p.fl))),1);   // volteo: da sensación de giro en 3D
+    ctx.globalAlpha=p.a;ctx.fillStyle=p.c;
+    ctx.beginPath();ctx.moveTo(0,-h);
+    ctx.bezierCurveTo(w,-h*0.7,w*0.85,h*0.55,0,h);
+    ctx.bezierCurveTo(-w*0.85,h*0.55,-w,-h*0.7,0,-h);
+    ctx.fill();ctx.restore();
+  }
+  let tp=performance.now();
+  function caer(now){
+    if(!vivos)return;
+    const dt=Math.min(0.05,(now-tp)/1000);tp=now;
+    ctx.clearRect(0,0,W,H);
+    let quedan=0;
+    for(const p of pet){
+      if(p.dead)continue;
+      p.y+=p.v*dt;p.ph+=p.f*dt;p.rot+=p.vr*dt;p.fl+=p.vf*dt;
+      if(p.y>H+30){if(recicla)nuevo(p,true);else{p.dead=true;continue;}}
+      petalo(p);quedan++;
+    }
+    if(quedan)requestAnimationFrame(caer);
+  }
+  requestAnimationFrame(caer);
+
+  // ---------- Música: ../fotos/cancion.mp3, del segundo INI al FIN, una sola vez por cada visita ----------
+  const VOL=0.4,INI=35,FIN=90,VECES=1;   // VECES: cuántas veces suena el tramo en total
+  // si se vuelve a la página con el botón "atrás", se recarga para que la intro y la canción empiecen de nuevo
+  addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
+  const audio=document.getElementById('cancion');
+  let muted=false,fallo=false,vueltas=1,terminada=false;
+  audio.addEventListener('error',()=>{fallo=true;});   // si no carga, todo sigue sin música
+  function reproducir(){try{const p=audio.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}}
+  // vuelve al segundo INI (o un poco antes del final si la canción es más corta)
+  function aInicio(){try{audio.currentTime=Math.min(INI,(audio.duration||INI+1)-1);}catch(e){}}
+  // al acabar el tramo: lo repite si quedan vueltas; si no, la canción se para
+  function finTramo(){
+    if(terminada)return;
+    if(vueltas<VECES){vueltas++;aInicio();reproducir();}
+    else{terminada=true;audio.pause();}
+  }
+  audio.addEventListener('timeupdate',()=>{if(audio.currentTime>=FIN)finTramo();});
+  audio.addEventListener('ended',finTramo);
+  function iniciarMusica(){
+    if(fallo)return;
+    try{
+      audio.volume=0;audio.muted=muted;
+      if(audio.readyState>=1)aInicio();else audio.addEventListener('loadedmetadata',aInicio,{once:true});
+    }catch(e){}
+    reproducir();
+    // fundido de entrada de 3 s hasta el 40 %
+    const ts=performance.now();
+    const subir=setInterval(()=>{
+      const k=Math.min(1,(performance.now()-ts)/3000);
+      try{audio.volume=VOL*k;}catch(e){}
+      if(k>=1)clearInterval(subir);
+    },50);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)audio.pause();else if(!fallo&&!terminada)reproducir();});
+  }
+  btnS.addEventListener('click',()=>{
+    muted=!muted;
+    btnS.setAttribute('aria-pressed',muted);
+    btnS.setAttribute('aria-label',muted?'Activar música':'Silenciar música');
+    audio.muted=muted;
+  });
+
+  // ---------- Secuencia ----------
+  let estado='espera',saltado=false,revelado=false,revTimer=0,tInicio=0;const timers=[];
+  // el ramo está listo cuando su script ha terminado de construirlo
+  function listo(){try{return typeof SAT!=='undefined'&&typeof world!=='undefined';}catch(e){return false;}}
+  function empezar(){
+    estado='texto';tInicio=performance.now();
+    abrir.classList.add('fuera');
+    [1200,3900,6600,9200].forEach((ms,i)=>timers.push(setTimeout(()=>lineas[i].classList.add('ver'),ms)));
+    timers.push(setTimeout(intentar,11800));
+    btnS.classList.add('ver');
+    try{iniciarMusica();}catch(e){}   // la música nunca frena la animación del texto
+  }
+  function intentar(){
+    if(estado!=='texto')return;
+    if(listo()||performance.now()-tInicio>30000){estado='revelando';revTimer=setTimeout(revelar,saltado?0:2000);}
+    else setTimeout(intentar,200);
+  }
+  function revelar(){
+    if(revelado)return;revelado=true;
+    if(saltado)intro.classList.add('rapido');
+    const dur=saltado?1400:2500;
+    // el ramo da una vuelta suave hasta quedar de frente
+    if(listo()&&!reduceI){
+      world.rotation.y=-T2;
+      const ts=performance.now(),D=dur+900;
+      (function girar(){
+        try{if(drag)return;}catch(e){}   // si se toca el ramo, deja de girar solo
+        const k=Math.min(1,(performance.now()-ts)/D),e=k<0.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+        world.rotation.y=-T2*(1-e);
+        if(k<1)requestAnimationFrame(girar);
+      })();
+    }
+    intro.classList.add('fuera');
+    setTimeout(()=>{
+      intro.style.display='none';
+      document.body.classList.add('ramo-visible');
+      btnM.classList.add('ver');
+      recicla=false;   // los pétalos que quedan terminan de caer y desaparecen
+      setTimeout(()=>{pc.style.opacity='0';},2500);
+      setTimeout(()=>{vivos=false;pc.remove();},5600);
+    },dur);
+  }
+  function tocar(){
+    if(estado==='espera')empezar();
+    else if(estado==='texto'){saltado=true;timers.forEach(clearTimeout);intentar();}
+    else if(estado==='revelando'&&!revelado){saltado=true;clearTimeout(revTimer);revelar();}
+  }
+  intro.addEventListener('click',tocar);
+  intro.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tocar();}});
+})();
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const TAU=Math.PI*2;
