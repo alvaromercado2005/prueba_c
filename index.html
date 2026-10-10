@@ -3,26 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi novia 💖</title>
-    <!-- Enlace a tus futuros estilos CSS -->
-    <link rel="stylesheet" href="css/estilos.css">   
-     <!-- Fuente tipo dibujo/boceto -->
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <title>Para mi novia 💙</title>
+    <!-- Enlace a tus estilos CSS -->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!-- Fuentes: Playfair Display (título y números) y Montserrat (resto) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="pagina-contador">
+
+    <!-- Fondo: destellos que suben (canvas) y corazones flotantes -->
+    <canvas class="fondo-destellos" id="fondoDestellos" aria-hidden="true"></canvas>
+    <div class="capa-corazones" id="capaCorazones" aria-hidden="true"></div>
+    <!-- Capa para las explosiones de corazones y confeti -->
+    <div class="capa-confeti" id="capaConfeti" aria-hidden="true"></div>
 
     <div class="container" id="mainCard">
+        <!-- Línea pequeña encima del título -->
+        <p class="dedicatoria">
+            <svg class="dedicatoria-corazon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span>Para ti, <strong>Celia</strong></span>
+            <svg class="dedicatoria-corazon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </p>
+
         <!-- Título principal -->
         <h1 id="tituloPrincipal">Cuenta atrás</h1>
-        
-        <!-- Mensaje dinámico que cambia según los días restantes -->
-        <p class="subtitulo" id="mensajeDinamico">Cargando sorpresa...</p>
 
-        <!-- Barra de carga -->
+        <!-- Mensaje que solo aparece cuando llega el día -->
+        <p class="subtitulo" id="mensajeDinamico" hidden></p>
+
+        <!-- Días que llevamos juntos (se calcula en js/contador.js) -->
+        <p class="dias-juntos" id="diasJuntos">
+            <span id="diasJuntosTexto">Llevamos <strong>0</strong> días juntos</span>
+            <svg class="dias-juntos-corazon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </p>
+
+        <!-- Barra de carga con corazón -->
         <div class="barra-contenedor" id="barraContenedor">
             <div class="barra-progreso" id="barraProgreso"></div>
+            <div class="runner" id="runner" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
         </div>
-        <div class="porcentaje-texto" id="porcentajeTexto">loading 0%</div>
+        <div class="porcentaje-texto" id="porcentajeTexto">cargando amor… 0%</div>
 
         <!-- Reloj de cuenta atrás -->
         <div class="contador-grid">
@@ -44,11 +66,36 @@
             </div>
         </div>
 
-        <!-- Botón para ir al menú de los 6 regalos -->
-        <a href="menu.html" class="btn-entrar" id="btnEntrar">Abrir sorpresas 💖</a>
+        <!-- Frase del día (se elige en js/contador.js, array FRASES) -->
+        <div class="frase-dia" id="fraseDia">
+            <p class="frase-etiqueta">Mensaje de hoy</p>
+            <p class="frase-texto" id="fraseTexto"></p>
+        </div>
+
+        <!-- Botón para ir al menú de los 6 regalos (bloqueado hasta el día) -->
+        <div class="zona-boton">
+            <a href="menu.html" class="btn-entrar bloqueado" id="btnEntrar" aria-disabled="true">
+                <span class="btn-candado" id="btnCandado" aria-hidden="true">🔒</span>
+                <span id="btnTexto">Abrir sorpresas</span>
+            </a>
+            <p class="nota-desbloqueo" id="notaDesbloqueo">Se desbloquea el 11 de diciembre ✨</p>
+            <p class="mensaje-bloqueo" id="mensajeBloqueo" role="status" aria-live="polite"></p>
+        </div>
     </div>
 
-    <!-- Enlace al archivo JavaScript separado -->
+    <!-- Transición a pantalla completa al pulsar "Abrir sorpresas": fundido + textos (en js/contador.js) -->
+    <div class="transicion" id="transicion" hidden>
+        <div class="transicion-contenido">
+            <h2 class="transicion-titulo" id="transicionTitulo"></h2>
+            <p class="transicion-subtitulo" id="transicionSubtitulo">
+                <span></span>
+                <svg class="dedicatoria-corazon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </p>
+        </div>
+    </div>
+
+    <!-- Configuración compartida (fechas) y lógica del contador -->
+    <script src="js/config.js"></script>
     <script src="js/contador.js"></script>
 </body>
 </html>

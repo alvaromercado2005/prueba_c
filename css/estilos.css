@@ -9,6 +9,12 @@
     --accent-glow: rgba(47, 109, 181, 0.4);
     --texto-claro: #1f3550;
     --texto-secundario: #5a7491;
+
+    /* Nombres para los azules que ya usa la web (contador del index) */
+    --azul-marino: #1f3550;
+    --azul: #2f6db5;
+    --azul-cielo: #6cb4ee;
+    --azul-claro: #cfe3f7;
 }
 
 * {
@@ -605,5 +611,779 @@ p.subtitulo {
     .tarjeta-cupon,
     .tarjeta-regalo {
         padding: 15px 8px;
+    }
+}
+/* ==========================================================
+   PÁGINA DEL CONTADOR (INDEX.HTML)
+   Todo va dentro de .pagina-contador para no afectar a otras páginas
+   ========================================================== */
+
+/* --- FONDO: CANVAS DE DESTELLOS Y CAPAS DECORATIVAS --- */
+.fondo-destellos,
+.capa-corazones,
+.capa-confeti {
+    position: fixed;
+    inset: 0;
+    pointer-events: none; /* nunca bloquean clics */
+}
+
+.fondo-destellos {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.capa-corazones {
+    z-index: 1;
+    overflow: hidden;
+}
+
+.capa-confeti {
+    z-index: 50;
+    overflow: hidden;
+}
+
+.corazon-flotante {
+    position: absolute;
+    bottom: -40px;
+    filter: drop-shadow(0 0 4px rgba(47, 109, 181, 0.35));
+    will-change: transform, opacity;
+}
+
+.pagina-contador .container {
+    position: relative;
+    max-width: 620px;
+}
+
+/* --- TEXTO SUPERIOR --- */
+/* Dedicatoria: ♡ Para ti, Celia ♡ */
+.dedicatoria {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 1rem + 1.5vw, 1.8rem);
+    color: var(--azul);
+    animation: dedicatoriaEntra 0.9s ease both;
+}
+
+.dedicatoria strong {
+    font-weight: 700;
+    color: var(--azul-marino);
+}
+
+.dedicatoria-corazon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 3px rgba(31,58,95,.55)) drop-shadow(0 0 8px rgba(90,174,232,.9));
+    animation: latidoSuave 1.4s ease-in-out infinite;
+}
+
+.dedicatoria-corazon:last-child {
+    animation-delay: 0.2s;
+}
+
+@keyframes dedicatoriaEntra {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes latidoSuave {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.pagina-contador h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.15;
+    background: linear-gradient(90deg, var(--azul-marino), var(--azul), var(--azul-cielo), var(--azul), var(--azul-marino));
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 12px rgba(59, 130, 196, 0.3));
+    animation: degradadoTitulo 6s linear infinite;
+}
+
+.pagina-contador p.subtitulo {
+    font-weight: 400;
+    font-size: 1.05rem;
+}
+
+@keyframes degradadoTitulo {
+    from { background-position: 0% 50%; }
+    to { background-position: 250% 50%; }
+}
+
+@keyframes aparecerSuave {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- LLEVAMOS X DÍAS JUNTOS --- */
+.pagina-contador p.subtitulo {
+    margin-bottom: 10px; /* la línea de días juntos va justo debajo */
+}
+
+.dias-juntos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .9rem;
+    color: #6b8bab;
+    animation: fraseAparece 1.2s ease 0.3s backwards;
+}
+
+.dias-juntos strong {
+    font-weight: 600;
+    color: var(--azul);
+}
+
+.dias-juntos-corazon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 3px rgba(31,58,95,.55)) drop-shadow(0 0 8px rgba(90,174,232,.9));
+}
+
+/* --- BARRA DE PROGRESO CON BRILLO Y CORAZÓN --- */
+.pagina-contador .barra-contenedor {
+    overflow: visible; /* para que el corazón no se corte */
+    box-shadow: inset 0 1px 4px rgba(30, 70, 120, 0.08);
+}
+
+.pagina-contador .barra-progreso {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, var(--azul-cielo), var(--azul));
+}
+
+.pagina-contador .barra-progreso::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, .35) 50%, transparent 60%);
+    transform: translateX(-100%);
+    animation: brilloBarra 3s ease-in-out infinite;
+}
+
+@keyframes brilloBarra {
+    0% { transform: translateX(-100%); }
+    70%, 100% { transform: translateX(100%); }
+}
+
+.runner{
+  position:absolute; top:50%; left:0;
+  width:34px; height:34px;
+  transition:left 1s ease;
+  animation:beat 1.2s ease-in-out infinite;
+  filter:drop-shadow(0 0 3px rgba(31,58,95,.55)) drop-shadow(0 0 10px rgba(90,174,232,.9));
+}
+.runner svg{ width:100%; height:100%; display:block; }
+
+@keyframes beat{
+  0%,100%{ transform:translate(-50%,-50%) scale(1); }
+  15%    { transform:translate(-50%,-50%) scale(1.22); }
+  30%    { transform:translate(-50%,-50%) scale(1); }
+  45%    { transform:translate(-50%,-50%) scale(1.12); }
+}
+
+.pagina-contador .porcentaje-texto {
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* --- TARJETAS DEL CONTADOR --- */
+.pagina-contador .caja-tiempo {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 18px 6px 14px;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(30, 70, 120, 0.08);
+    overflow: hidden;
+}
+
+.pagina-contador .caja-tiempo:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(59, 130, 196, 0.45);
+    box-shadow: 0 12px 28px rgba(30, 70, 120, 0.16);
+}
+
+.pagina-contador .caja-tiempo span {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Animación al cambiar un número: aparece desde arriba con desenfoque */
+.caja-tiempo span.cambio {
+    animation: numeroCae 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes numeroCae {
+    from { opacity: 0; transform: translateY(-60%); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* --- FRASE DEL DÍA --- */
+.frase-dia {
+    max-width: 600px;
+    margin: 0 auto 35px;
+    text-align: center;
+    animation: fraseAparece 1.2s ease 0.3s backwards;
+    transition: opacity 0.6s ease;
+}
+
+.frase-dia.escondida {
+    opacity: 0;
+}
+
+.frase-etiqueta {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--azul-cielo);
+    margin-bottom: 8px;
+}
+
+.frase-texto {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 0.85rem + 0.8vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--azul-marino);
+}
+
+@keyframes fraseAparece {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- BOTÓN ABRIR SORPRESAS --- */
+.zona-boton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pagina-contador .btn-entrar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease, opacity 0.6s ease;
+}
+
+/* Bloqueado: aspecto apagado */
+.btn-entrar.bloqueado {
+    background: rgba(255, 255, 255, 0.6);
+    color: #6b8bab;
+    border: 1px dashed rgba(59, 130, 196, 0.35);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.btn-entrar.bloqueado:hover {
+    transform: none;
+    filter: none;
+    box-shadow: 0 4px 14px rgba(30, 70, 120, 0.08);
+}
+
+.btn-candado {
+    font-size: 0.95rem;
+}
+
+.btn-entrar.tiembla {
+    animation: temblar 0.5s ease;
+}
+
+@keyframes temblar {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-8px) rotate(-1deg); }
+    30% { transform: translateX(7px) rotate(1deg); }
+    45% { transform: translateX(-5px); }
+    60% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+}
+
+/* Desbloqueado: degradado azul con brillo que pulsa */
+.btn-entrar.desbloqueado {
+    animation: aparecerSuave 0.6s ease, pulsoBoton 2.2s ease-in-out 0.6s infinite;
+}
+
+@keyframes pulsoBoton {
+    0%, 100% { box-shadow: 0 4px 20px var(--accent-glow); }
+    50% { box-shadow: 0 4px 34px rgba(108, 180, 238, 0.85), 0 0 0 6px rgba(108, 180, 238, 0.18); }
+}
+
+.btn-entrar.saliendo {
+    opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+}
+
+/* Mensajito al pulsar antes de tiempo */
+.mensaje-bloqueo {
+    min-height: 1.4em;
+    margin-top: 14px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--azul-cielo), var(--azul));
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 14px rgba(47, 109, 181, 0.3);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffffff;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.mensaje-bloqueo.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nota-desbloqueo {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    transition: opacity 0.6s ease;
+}
+
+.nota-desbloqueo.escondida {
+    opacity: 0;
+}
+
+/* --- PARTÍCULAS DE LA EXPLOSIÓN --- */
+.particula-corazon,
+.particula-confeti {
+    position: absolute;
+    will-change: transform, opacity;
+}
+
+.particula-corazon {
+    line-height: 1;
+    filter: drop-shadow(0 0 3px rgba(47, 109, 181, 0.4));
+}
+
+.particula-confeti {
+    width: 8px;
+    height: 12px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(59, 130, 196, 0.15);
+}
+
+/* --- MÓVIL: TARJETAS EN 2 COLUMNAS --- */
+@media (max-width: 639px) {
+    .pagina-contador .contador-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pagina-contador h1 {
+        font-size: 2.3rem;
+    }
+
+    .pagina-contador .caja-tiempo span {
+        font-size: 2rem;
+    }
+}
+
+/* --- MENOS MOVIMIENTO SI EL SISTEMA LO PIDE --- */
+@media (prefers-reduced-motion: reduce) {
+    .pagina-contador *,
+    .pagina-contador *::before,
+    .pagina-contador *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .pagina-contador .barra-progreso::after {
+        display: none;
+    }
+
+    /* Sin latido, el corazón tiene que seguir centrado en la barra */
+    .pagina-contador .runner {
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* ==========================================================
+   TRANSICIÓN AL ABRIR LAS SORPRESAS (INDEX.HTML)
+   Capa a pantalla completa con fundido y textos
+   ========================================================== */
+.transicion {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    /* Mismo degradado del fondo, algo transparente para ver el desenfoque */
+    background: linear-gradient(160deg, rgba(247, 251, 255, 0.82) 0%, rgba(227, 239, 251, 0.86) 55%, rgba(207, 227, 247, 0.9) 100%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.transicion[hidden] {
+    display: none;
+}
+
+.transicion.visible {
+    opacity: 1;
+}
+
+.transicion.fase-final {
+    cursor: pointer;
+}
+
+.transicion-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: clamp(14px, 3vh, 26px);
+    transition: opacity 0.6s ease;
+}
+
+.transicion.fase-final .transicion-contenido {
+    opacity: 0;
+}
+
+/* --- TEXTOS --- */
+.transicion-titulo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: clamp(1.6rem, 5.5vw, 2.8rem);
+    line-height: 1.25;
+    color: var(--azul-marino);
+    max-width: 16em;
+}
+
+.transicion-titulo em {
+    font-style: italic;
+}
+
+.transicion-titulo .sin-corte {
+    white-space: nowrap;
+}
+
+.transicion-titulo .palabra {
+    display: inline-block;
+    opacity: 0;
+}
+
+.transicion.fase-titulo .palabra {
+    animation: palabraAparece 0.6s ease both;
+    animation-delay: calc(var(--i) * 0.16s);
+}
+
+@keyframes palabraAparece {
+    from { opacity: 0; transform: translateY(8px); filter: blur(3px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.transicion-subtitulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    color: var(--azul);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.transicion.fase-subtitulo .transicion-subtitulo {
+    opacity: 1;
+}
+
+/* Movimiento reducido: los fundidos se mantienen */
+@media (prefers-reduced-motion: reduce) {
+    .pagina-contador .transicion,
+    .pagina-contador .transicion-contenido,
+    .pagina-contador .transicion-subtitulo {
+        transition-duration: 0.6s !important;
+    }
+}
+
+/* ==========================================================
+   MENÚ: CAJAS DE REGALO QUE SE ABREN (MENU.HTML)
+   Todo va dentro de .pagina-menu
+   ========================================================== */
+.pagina-menu .subtitulo .dedicatoria-corazon {
+    vertical-align: -3px;
+    margin-left: 4px;
+}
+
+/* 3 columnas; 2 por debajo de 900px; 1 por debajo de 520px */
+.pagina-menu .regalos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.pagina-menu .tarjeta-regalo {
+    min-height: 220px;
+}
+
+.pagina-menu .tarjeta-regalo p {
+    display: block;
+}
+
+/* Cerrada: solo se ve la caja, sin el fondo de tarjeta */
+.pagina-menu .tarjeta-regalo.cerrado,
+.pagina-menu .tarjeta-regalo.cerrado:hover {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+/* Abierta: fondo azul claro y borde azul */
+.pagina-menu .tarjeta-regalo.abierto {
+    background: linear-gradient(160deg, #f7fbff, #e3effb);
+    border-color: rgba(59, 130, 196, 0.35);
+}
+
+.pagina-menu .envoltorio {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pagina-menu .envoltorio small {
+    margin-top: 12px;
+}
+
+/* --- LA CAJA (medidas en em: crece con el font-size) --- */
+.caja-regalo {
+    --tam: clamp(96px, 24vw, 124px);
+    width: var(--tam);
+    height: var(--tam);
+    font-size: calc(var(--tam) / 10);
+    animation: flotarCaja 3s ease-in-out infinite;
+}
+
+/* Cada caja flota con su propio retraso */
+.tarjeta-regalo:nth-child(2) .caja-regalo { animation-delay: -0.5s; }
+.tarjeta-regalo:nth-child(3) .caja-regalo { animation-delay: -1s; }
+.tarjeta-regalo:nth-child(4) .caja-regalo { animation-delay: -1.5s; }
+.tarjeta-regalo:nth-child(5) .caja-regalo { animation-delay: -2s; }
+.tarjeta-regalo:nth-child(6) .caja-regalo { animation-delay: -2.5s; }
+
+.caja-mueve {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 100%;
+}
+
+/* El regalo: emoji 🎁 */
+.caja-emoji {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8.4em;
+    line-height: 1;
+    z-index: 2;
+}
+
+/* Número del regalo, en la esquina */
+.caja-numero {
+    position: absolute;
+    left: 0.6em;
+    top: 1.2em;
+    z-index: 3;
+    width: max(1.7em, 19px);
+    height: max(1.7em, 19px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(59, 130, 196, 0.35);
+    color: var(--azul-marino);
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: max(1.1em, 12px);
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(47, 109, 181, 0.25);
+}
+
+/* Destello de luz que sale de dentro */
+.caja-destello {
+    position: absolute;
+    left: 50%;
+    top: 5em;
+    width: 7em;
+    height: 7em;
+    margin: -3.5em 0 0 -3.5em;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0.9) 25%, rgba(108, 180, 238, 0.3) 50%, rgba(108, 180, 238, 0) 70%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* Corazones que salen al abrir */
+.capa-corazones-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.corazon-caja {
+    position: absolute;
+    filter: drop-shadow(0 0 3px rgba(31,58,95,.45)) drop-shadow(0 0 6px rgba(90,174,232,.7));
+}
+
+.corazon-caja svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- ANIMACIONES --- */
+/* Al pasar el ratón: se mueve como si hubiera algo dentro */
+.pagina-menu .tarjeta-regalo.cerrado:hover .caja-mueve {
+    animation: balanceoCaja 0.9s ease-in-out infinite;
+}
+
+/* Apertura: tiembla → salta y se desvanece con destello → aparece la tarjeta */
+.pagina-menu .tarjeta-regalo.cerrado.abriendo .caja-mueve {
+    animation: temblarCaja 0.5s ease-in-out;
+}
+
+.pagina-menu .tarjeta-regalo.destapando .caja-emoji {
+    animation: regaloSalta 0.6s ease-out forwards;
+}
+
+.pagina-menu .tarjeta-regalo.destapando .caja-destello {
+    animation: destelloCaja 0.8s ease-out forwards;
+}
+
+.pagina-menu .tarjeta-regalo.desvaneciendo .envoltorio {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.pagina-menu .tarjeta-regalo.abierto .contenido {
+    animation: none;
+}
+
+.pagina-menu .tarjeta-regalo.recien-abierto {
+    animation: tarjetaCrece 0.5s cubic-bezier(0.25, 0.9, 0.35, 1.15);
+}
+
+@keyframes flotarCaja {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+
+@keyframes balanceoCaja {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-4deg); }
+    75% { transform: rotate(4deg); }
+}
+
+@keyframes temblarCaja {
+    0%, 100% { transform: rotate(0) scale(1); }
+    15% { transform: rotate(-7deg) scale(1.04); }
+    32% { transform: rotate(7deg) scale(1.06); }
+    50% { transform: rotate(-6deg) scale(1.06); }
+    68% { transform: rotate(6deg) scale(1.08); }
+    85% { transform: rotate(-3deg) scale(1.08); }
+}
+
+@keyframes regaloSalta {
+    0% { transform: scale(1); opacity: 1; }
+    40% { transform: scale(1.18) translateY(-4px); opacity: 1; }
+    100% { transform: scale(1.3); opacity: 0; }
+}
+
+@keyframes destelloCaja {
+    0% { opacity: 0; transform: scale(0.2); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: scale(2.6); }
+}
+
+@keyframes tarjetaCrece {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fundidoTarjeta {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* "Volver a envolver los regalos" */
+.reenvolver {
+    display: block;
+    margin: 18px auto 0;
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    color: var(--texto-secundario);
+    opacity: 0.75;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.reenvolver:hover {
+    opacity: 1;
+    color: var(--azul);
+}
+
+@media (max-width: 899px) {
+    .pagina-menu .regalos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 519px) {
+    .pagina-menu .regalos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Movimiento reducido: la apertura es solo un fundido */
+@media (prefers-reduced-motion: reduce) {
+    .pagina-menu .caja-regalo,
+    .pagina-menu .tarjeta-regalo.cerrado:hover .caja-mueve,
+    .pagina-menu .subtitulo .dedicatoria-corazon {
+        animation: none;
+    }
+
+    .pagina-menu .tarjeta-regalo.desvaneciendo .envoltorio {
+        transform: none;
+    }
+
+    .pagina-menu .tarjeta-regalo.recien-abierto {
+        animation: fundidoTarjeta 0.4s ease;
     }
 }
