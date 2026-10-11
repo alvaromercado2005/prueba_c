@@ -1,0 +1,1 @@
+Mete aquí los 4 mp3 con estos nombres: cancion1.mp3, cancion2.mp3, cancion3.mp3 y cancion4.mp3 (en el mismo orden que la lista del reproductor).

@@ -147,13 +147,21 @@
         });
 
         // Al cargar: dejar abiertos los que ya se descubrieron (sin animación)
-        const yaAbiertos = leerAbiertos();
-        tarjetas.forEach(t => {
-            if (yaAbiertos.includes(t.dataset.id)) {
-                t.classList.remove('cerrado');
-                t.classList.add('abierto');
-            }
-        });
+        function pintarEstado() {
+            const yaAbiertos = leerAbiertos();
+            tarjetas.forEach(t => {
+                delete t.dataset.animando;
+                t.classList.remove('abriendo', 'destapando', 'desvaneciendo', 'recien-abierto');
+                const abierto = yaAbiertos.includes(t.dataset.id);
+                t.classList.toggle('abierto', abierto);
+                t.classList.toggle('cerrado', !abierto);
+            });
+        }
+        pintarEstado();
+
+        // Al volver con el botón "atrás" el navegador puede restaurar la página
+        // a mitad de animación: se repinta con lo guardado
+        window.addEventListener('pageshow', e => { if (e.persisted) pintarEstado(); });
 
         // Corazones blancos y azules que suben desde la caja
         function corazones(t) {
@@ -184,11 +192,11 @@
 
         function abrir(t) {
             t.dataset.animando = '1';
+            // Al terminar: se guarda como abierto y entra directamente en el regalo
+            // (la tarjeta con su contenido ya se verá al volver al menú)
             const fin = () => {
-                t.classList.remove('cerrado', 'abriendo', 'destapando', 'desvaneciendo');
-                t.classList.add('abierto', 'recien-abierto');
                 guardarAbierto(t.dataset.id);
-                delete t.dataset.animando;
+                location.href = t.href;
             };
 
             if (reducirMovimiento) {
@@ -204,7 +212,7 @@
                 corazones(t);
             }, 500);
             setTimeout(() => t.classList.add('desvaneciendo'), 1000);  // la caja se desvanece
-            setTimeout(fin, 1300);                              // aparece la tarjeta
+            setTimeout(fin, 1300);                              // entra en el regalo
         }
 
         // Al tocar un regalo cerrado: se abre en lugar de navegar
