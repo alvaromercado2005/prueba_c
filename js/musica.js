@@ -5,14 +5,14 @@
 //   duracion -> lo que dura (se ve en la lista mientras carga el mp3)
 //   audio    -> ruta al mp3, dentro de la carpeta regalos/canciones/
 const CANCIONES = [
-    { titulo: "WYA REMIX RED", artistas: "J Abdiel, De La Rose, Yan Block, iZaak, Jay Wheeler", duracion: "5:21", audio: "canciones/cancion1.mp3" },
-    { titulo: "DURO", artistas: "Chris Jedi, Anuel AA, Gaby Music, Jamby \"La Sexy Voz\"", duracion: "3:38", audio: "canciones/cancion2.mp3" },
-    { titulo: "ALMAS GEMELAS", artistas: "Myke Towers", duracion: "3:55", audio: "canciones/cancion3.mp3" },
-    { titulo: "La 2blea", artistas: "Anuel AA", duracion: "5:25", audio: "canciones/cancion4.mp3" }
+    { titulo: "Beauty And A Beat", artistas: "Justin Bieber, Nicki Minaj", duracion: "3:41", audio: "canciones/cancion1.mp3" },
+    { titulo: "entre la luna y yo", artistas: "D.Valentino", duracion: "3:21", audio: "canciones/cancion2.mp3" },
+    { titulo: "titi", artistas: "Eflexx,D.Valentino,Enry-K", duracion: "2:59", audio: "canciones/cancion3.mp3" },
+    { titulo: "Secret", artistas: "LANE,Al Safir", duracion: "3:22", audio: "canciones/cancion4.mp3" }
 ];
 
 // Enlace de la playlist completa (botón "Escuchar en Spotify")
-const PLAYLIST_URL = "https://open.spotify.com/playlist/5Mp8ctWFk1O9lLlNg8BrNE";
+const PLAYLIST_URL = "https://open.spotify.com/playlist/3w53CUDj4k6HF1XvnLeSqY?si=8ffd828bd1f849c6&pt=ded532c84f721eee004de694b8776d46";
 
 // Tus canciones especiales. Cambia los textos y añade o quita las que quieras.
 // "especial: true" resalta la tuya (la de los dos).
@@ -191,7 +191,7 @@ elemProgreso.addEventListener("keydown", (e) => {
 cargar(0);
 
 // ---------- Notas musicales flotando ----------
-const simbolos = ["♪", "♫", "♩", "♬", "💗"];
+const simbolos = ["♪", "♫", "♩", "♬", "🤍"];
 
 function lanzarNota() {
     const nota = document.createElement("span");
