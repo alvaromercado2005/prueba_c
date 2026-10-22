@@ -1,19 +1,20 @@
 // ================== CONFIGURACIÓN ==================
 const listaRazones = [
-    "Por cómo brillas cuando sonríes de verdad.",
-    "Porque haces que los días grises se conviertan en los mejores.",
-    "Por tu forma de escuchar y cuidarme siempre.",
-    "Porque cada risa a tu lado es mi momento favorito del día.",
-    "Porque eres mi refugio y mi paz en cualquier lugar.",
-    "Por tu inteligencia y lo mucho que admiro todo lo que haces.",
-    "Porque me motivas a ser mejor persona cada día.",
-    "Porque a tu lado cualquier sitio se siente como en casa.",
-    "Por la complicidad que tenemos con solo una mirada.",
-    "Simplemente, porque eres el amor de mi vida."
+    "Por esa sonrisa que me alegra cada dia de mi vida ",
+    "Por cada abrazo que me das y hace que mi mundo se tranquilice",
+    "Por estar siempre junto a mi en los buenos y malos momentos",
+    "Por esos dibujos que me haces y me hacen sentir tan especial",
+    "Por esas llamadas que hacen que me sienta mucho mas cercad de ti",
+    "Por cada te amo que me escribes y me hacen brillar los ojos",
+    "Por esas tardes que parecen que pasan en segundos ",
+    "Por esas miles de risas que me sacas cada vez que estoy junto a ti",
+    "Por ser esa persona que podre decir en un futuro que sera mi mujer",
+    "Por siempre preocuparte por mi y hacerme sentir que soy importante para ti",
 ];
 
-const PAUSA_ENTRE_CARTAS = 180; // milisegundos entre una carta y la siguiente
+const PAUSA_ENTRE_CARTAS = 800; // milisegundos entre una carta y la siguiente
 const CLAVE = "razonesVistas";  // dónde se guardan las cartas ya descubiertas
+const TIEMPO_GIRO = 700;        // lo que tarda la carta en darse la vuelta (igual que en razones.css)
 // ===================================================
 
 const grid = document.getElementById("razonesGrid");
@@ -47,7 +48,7 @@ function actualizarContador() {
     } else if (descubiertas < total) {
         contador.textContent = `Has descubierto ${descubiertas} de ${total}`;
     } else {
-        contador.textContent = "Las has descubierto todas… y aun así podría seguir infinitamente 💖";
+        contador.textContent = "Las has descubierto todas… y aun así podría seguir infinitamente 🤍";
     }
 }
 
@@ -62,7 +63,7 @@ function crearVisor() {
         <div class="carta-grande">
             <span class="frente-num"></span>
             <p class="frente-texto"></p>
-            <span class="carta-corazon">💖</span>
+            <span class="carta-corazon">🤍</span>
         </div>
     `;
     document.body.appendChild(visor);
@@ -96,7 +97,7 @@ function crearCarta(i, texto) {
     carta.innerHTML = `
         <div class="carta-interior">
             <div class="cara dorso">
-                <span class="dorso-corazon">💖</span>
+                <span class="dorso-corazon">🤍</span>
                 <span class="dorso-num">${i + 1}</span>
             </div>
             <div class="cara frente">
@@ -108,12 +109,22 @@ function crearCarta(i, texto) {
     carta.querySelector(".frente-texto").textContent = texto;
 
     carta.addEventListener("click", () => {
+        if (carta.dataset.girando) return;  // ignora toques mientras gira
+
         if (!carta.classList.contains("girada")) {
-            carta.classList.add("girada");   // primer toque: da la vuelta
+            carta.classList.add("girada");   // da la vuelta...
             guardarVista(i);
             actualizarContador();
+
+            // ...y en cuanto termina el giro, se amplía sola
+            const sinAnimacion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            carta.dataset.girando = "1";
+            setTimeout(() => {
+                delete carta.dataset.girando;
+                abrirVisor(i);
+            }, sinAnimacion ? 0 : TIEMPO_GIRO);
         } else {
-            abrirVisor(i);                   // ya girada: se amplía
+            abrirVisor(i);                   // ya girada: se amplía directamente
         }
     });
 

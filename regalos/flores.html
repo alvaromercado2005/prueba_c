@@ -49,6 +49,7 @@ body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);bo
 </head>
 <body>
 <canvas id="c" aria-label="Lirio en 3D"></canvas>
+<!-- DESACTIVADO INTRO (intro, pétalos y audio)
 <div id="intro" role="button" tabindex="0" aria-label="Toca para abrir">
   <div class="intro-abrir">
     <p>Toca para abrir</p>
@@ -62,9 +63,10 @@ body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);bo
   </div>
 </div>
 <canvas id="petalos" aria-hidden="true"></canvas>
-<audio id="cancion" src="../fotos/cancion.mp3" preload="auto"></audio>
+<audio id="cancion" src="../fotos/cancion.mp3" preload="auto"></audio> -->
 <button id="btnSonido" class="ctrl" type="button" aria-label="Silenciar música" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="on-ondas" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="on-x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
 <a id="btnMenu" class="ctrl" href="../menu.html">‹ Menú</a>
+<!-- DESACTIVADO INTRO (script de intro y música)
 <script>
 // ===== Intro antes del ramo: pétalos, texto, música y transición =====
 (function(){
@@ -206,6 +208,7 @@ body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);bo
   intro.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tocar();}});
 })();
 </script>
+FIN DESACTIVADO INTRO -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -501,26 +504,149 @@ function petalMat(tex,color,side,emi,rough,amt){
 softify(front,0.3);softify(backM,0.3);
 function sprayDir(az,pol){const a=az*Math.PI/180,p=pol*Math.PI/180;return new THREE.Vector3(Math.sin(p)*Math.cos(a),Math.cos(p),Math.sin(p)*Math.sin(a));}
 
-// ===== Gerberas: naranja rojizo con puntas amarillas, centro naranja oscuro con anillo amarillo =====
+// ===== Gerberas: disco plano, una corona de pétalos largos y estrechos (+ segunda fila detrás), centro grande =====
+// Textura del pétalo (canvas): rojo anaranjado profundo (bermellón/coral) en el 80 % del pétalo, base algo más anaranjada,
+// sombra junto al centro y en el pliegue central, toque fino amarillo anaranjado solo en el último 10 % y en un borde muy fino;
+// líneas longitudinales y punta con 3 dientecitos
 function gerTexture(P){
-  const c=document.createElement('canvas');c.width=64;c.height=256;
-  const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);
-  g.addColorStop(0,P.tip);g.addColorStop(0.1,P.a);g.addColorStop(0.5,P.b);g.addColorStop(0.88,P.c);g.addColorStop(1,'#e8860e');
-  x.fillStyle=g;x.fillRect(0,0,64,256);
-  const e=x.createLinearGradient(0,0,64,0);
-  e.addColorStop(0,'rgba(255,200,60,0.5)');e.addColorStop(0.12,'rgba(255,200,60,0)');e.addColorStop(0.88,'rgba(255,200,60,0)');e.addColorStop(1,'rgba(255,200,60,0.5)');
-  x.fillStyle=e;x.fillRect(0,0,64,256);
-  x.strokeStyle='rgba(110,15,0,0.16)';
-  for(let i=2;i<64;i+=4){x.beginPath();x.moveTo(i,256);x.lineTo(i,10);x.stroke();}
-  x.strokeStyle='rgba(255,190,60,0.35)';x.lineWidth=3;x.beginPath();x.moveTo(32,250);x.lineTo(32,25);x.stroke();
-  return new THREE.CanvasTexture(c);
+  const c=document.createElement('canvas');c.width=128;c.height=512;
+  const x=c.getContext('2d');
+  let s=P.seed;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+  const g=x.createLinearGradient(0,0,0,512);        // arriba = punta, abajo = base
+  g.addColorStop(0,P.body);g.addColorStop(0.8,P.body);g.addColorStop(1,P.base);
+  x.fillStyle=g;x.fillRect(0,0,128,512);
+  const sb=x.createLinearGradient(0,512,0,0);        // sombra cerca del centro
+  sb.addColorStop(0,'rgba('+P.shade+',0.6)');sb.addColorStop(0.12,'rgba('+P.shade+',0.35)');sb.addColorStop(0.3,'rgba('+P.shade+',0)');
+  x.fillStyle=sb;x.fillRect(0,0,128,512);
+  const sc=x.createLinearGradient(0,0,128,0);        // sombra en la zona del pliegue central
+  sc.addColorStop(0.36,'rgba('+P.shade+',0)');sc.addColorStop(0.5,'rgba('+P.shade+',0.55)');sc.addColorStop(0.64,'rgba('+P.shade+',0)');
+  x.fillStyle=sc;x.fillRect(0,0,128,512);
+  for(let i=0;i<24;i++){                              // finas líneas longitudinales
+    const x0=3+i*122/23+(r()-0.5)*2;
+    x.strokeStyle='rgba(110,16,6,0.12)';x.lineWidth=0.9+r()*0.5;
+    x.beginPath();x.moveTo(64+(x0-64)*0.85,512);x.lineTo(x0+(r()-0.5)*3,8);x.stroke();
+  }
+  const tc=P.tipc||P.edge,tp=x.createLinearGradient(0,0,0,92);   // punta: toque amarillo anaranjado suave en el último ~18 %, fundido con el rojo (en todo el ancho, no como contorno)
+  tp.addColorStop(0,'rgba('+tc+',0.78)');tp.addColorStop(0.3,'rgba('+tc+',0.45)');tp.addColorStop(0.65,'rgba('+tc+',0.15)');tp.addColorStop(1,'rgba('+tc+',0)');
+  x.fillStyle=tp;x.fillRect(0,0,128,92);
+  for(let y=0;y<90;y++){                             // borde muy fino solo cerca de la punta (no es un contorno)
+    const a=0.4*Math.pow(1-y/90,1.5);
+    const e=x.createLinearGradient(0,0,128,0);
+    e.addColorStop(0,'rgba('+P.edge+','+a.toFixed(3)+')');e.addColorStop(0.05,'rgba('+P.edge+',0)');
+    e.addColorStop(0.95,'rgba('+P.edge+',0)');e.addColorStop(1,'rgba('+P.edge+','+a.toFixed(3)+')');
+    x.fillStyle=e;x.fillRect(0,y,128,1);
+  }
+  if(P.rimTip){
+    for(let y=0;y<307;y++){                          // ribete amarillo anaranjado desde el 40 % del pétalo (y=307) hasta la punta: estrecho a mitad, ~23 % del ancho a cada lado cerca de la punta
+      const f=1-y/307,wd=0.03+0.2*Math.pow(f,1.2),a=Math.min(0.95,0.2+0.85*f);
+      const e=x.createLinearGradient(0,0,128,0);
+      e.addColorStop(0,'rgba('+P.rim+','+a.toFixed(3)+')');e.addColorStop(wd*0.45,'rgba('+P.rim+','+(a*0.8).toFixed(3)+')');e.addColorStop(wd,'rgba('+P.rim+',0)');
+      e.addColorStop(1-wd,'rgba('+P.rim+',0)');e.addColorStop(1-wd*0.45,'rgba('+P.rim+','+(a*0.8).toFixed(3)+')');e.addColorStop(1,'rgba('+P.rim+','+a.toFixed(3)+')');
+      x.fillStyle=e;x.fillRect(0,y,128,1);
+    }
+    const tq=x.createLinearGradient(0,0,0,80);         // punta (último 10 %) casi entera en amarillo anaranjado, fundiéndose con el rojo
+    tq.addColorStop(0,'rgba('+P.rim+',0.92)');tq.addColorStop(0.55,'rgba('+P.rim+',0.75)');tq.addColorStop(1,'rgba('+P.rim+',0)');
+    x.fillStyle=tq;x.fillRect(0,0,128,80);
+  }
+  if(P.dark){const bd=x.createLinearGradient(0,512,0,410);   // base (primer 20 %, junto al centro) más oscura: se nota dónde empieza cada pétalo
+    bd.addColorStop(0,'rgba('+P.dark+',0.9)');bd.addColorStop(0.5,'rgba('+P.dark+',0.55)');bd.addColorStop(1,'rgba('+P.dark+',0)');
+    x.fillStyle=bd;x.fillRect(0,410,128,102);}
+  // canvas entero opaco (sin recortes transparentes) y margen de 4 px que repite el color del borde del pétalo
+  x.drawImage(c,4,0,1,512,0,0,4,512);x.drawImage(c,123,0,1,512,124,0,4,512);
+  x.drawImage(c,0,4,128,1,0,0,128,4);x.drawImage(c,0,507,128,1,0,508,128,4);
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;t.anisotropy=4;return t;
 }
-const gerM1=petalMat(gerTexture({tip:'#f2a550',a:'#f07a2a',b:'#ea7226',c:'#d45c1c'}),0xffffff,THREE.DoubleSide,0.1,0.5,0.25);
-const gerM2=petalMat(gerTexture({tip:'#ee8a34',a:'#e2481a',b:'#d63410',c:'#b82608'}),0xffffff,THREE.DoubleSide,0.1,0.5,0.25);
-const gerLAY=[{n:22,phi0:1.5,curl:0.35,L:1.25,W:0.15},{n:20,phi0:1.3,curl:0.25,L:1.15,W:0.15},{n:17,phi0:1.1,curl:0.2,L:1.0,W:0.14},{n:14,phi0:0.9,curl:0.15,L:0.85,W:0.12}];
-const gerFl=new THREE.SphereGeometry(1,6,5);
+// brillo satinado suave, sin reflejos fuertes (roughness media + clearcoat muy ligero), sin emissive;
+// color base blanco: el rojo y el amarillo vienen solo de la textura (no se multiplican)
+function gerMat(P){return new THREE.MeshPhysicalMaterial({map:gerTexture(P),color:0xffffff,vertexColors:false,roughness:0.5,metalness:0,clearcoat:0.1,clearcoatRoughness:0.5,side:THREE.DoubleSide,alphaTest:0.5});}
+const gerM1=gerMat({seed:31,body:'#d9381e',base:'#e8551f',shade:'179,46,24',edge:'240,137,46',rim:'255,162,46',tipc:'244,154,42',dark:'184,46,24',rimTip:true});
+const gerMc=gerMat({seed:31,body:'#d9381e',base:'#e8551f',shade:'179,46,24',edge:'240,137,46',rim:'245,162,48',tipc:'244,154,42'});   // pétalos cortos del centro: el color de antes (sin ribete ni base oscura)
+const gerM3=gerMat({seed:83,body:'#b82e18',base:'#c8461c',shade:'150,38,18',edge:'232,130,44',rim:'240,152,46',tipc:'240,148,42',dark:'150,36,18',rimTip:true});   // pétalos de relleno por detrás, algo más oscuros
+const gerM2=gerMat({seed:57,body:'#a82816',base:'#b8401a',shade:'130,30,14',edge:'214,112,40',rim:'225,140,44',dark:'140,32,16',rimTip:true});   // fila de atrás, más oscura
+// Pétalo de gerbera: base estrecha que se ensancha hacia la mitad, punta redondeada, pliegue central en V muy abierta,
+// curvatura en S suave (sube al salir del centro y se arquea hacia abajo en la punta) y un ligero grosor
+// perfil de los pétalos grandes: largo (0 = base, 1 = punta) → ancho relativo; interpolación Catmull-Rom (suave) entre los puntos
+const GER_PU=[0,0.1,0.3,0.5,0.65,0.8,0.9,0.97,1],GER_PW=[0.35,0.7,0.95,1,0.95,0.75,0.45,0.15,0];
+function gerProfile(u){
+  u=Math.min(1,Math.max(0,u));let k=0;while(k<GER_PU.length-2&&u>GER_PU[k+1])k++;
+  const x0=GER_PU[k],x1=GER_PU[k+1],t=(u-x0)/(x1-x0),p1=GER_PW[k],p2=GER_PW[k+1];
+  const m=i=>{const a=Math.max(0,i-1),b=Math.min(GER_PU.length-1,i+1);return (GER_PW[b]-GER_PW[a])/(GER_PU[b]-GER_PU[a]);};
+  const d=x1-x0,t2=t*t,t3=t2*t;
+  return Math.max(0,(2*t3-3*t2+1)*p1+(t3-2*t2+t)*d*m(k)+(-2*t3+3*t2)*p2+(t3-t2)*d*m(k+1));
+}
+function gerPetalGeo(o){
+  const nu=o.nu||(LOWQ?26:48),nv=o.nv||(LOWQ?8:14),L=o.L,W=o.W,pos=[],uv=[],idx=[];
+  // línea central y ancho de cada fila
+  const RC=[];let cx=0,cy=0;
+  for(let i=0;i<=nu;i++){
+    // o.open: copa (sale subiendo, se abre y la punta vuelve un poco hacia arriba, nunca cae)
+    const u=i/nu,phi=o.open!==undefined?o.phi0+o.open*Math.sin(Math.PI*u*0.8):o.phi0+o.curl*u*u-(o.s||0)*Math.sin(Math.PI*Math.min(1,u/0.35));
+    const sm=Math.min(1,u/0.5);let w;
+    if(o.almond){   // silueta de almendra: ancho (% del máximo) según la tabla, interpolado suavemente
+      w=W*gerProfile(u);
+    }else{
+      const t=Math.max(0,(u-0.72)/0.28);
+      w=W*(0.38+0.62*sm*sm*(3-2*sm))*(0.22+0.78*Math.sqrt(1-t*t));
+    }
+    RC.push([cx,cy,phi,w,u]);
+    cx+=Math.sin(phi)*L/nu;cy+=Math.cos(phi)*L/nu;
+  }
+  for(let i0=0;i0<=nu;i0++){
+    for(let j=0;j<=nv;j++){
+      const v=-1+2*j/nv;
+      // muesca opcional: en las últimas filas, los vértices centrales se quedan un poco atrás
+      const i=o.notch?Math.min(i0,nu-Math.round(Math.max(0,1-Math.abs(v)/0.4)*o.notch)):i0;
+      const [cx,cy,phi,w,u]=RC[i];
+      const nx=-Math.cos(phi),ny=Math.sin(phi),ta=(o.tw||0)*u,ct=Math.cos(ta),st=Math.sin(ta),um=o.uvm||0;   // torsión opcional; margen de UV opcional
+      let off=(o.crease||0)*w*(Math.sqrt(v*v+0.012)-0.11)+(o.cup||0)*w*v*v+0.004*Math.sin(u*8+o.sd*2.3)*v*Math.min(1,u*3);
+      if(o.ew)off+=o.ew*Math.sin(u*(o.ef||14)+o.sd*1.7+v*0.8)*Math.pow(Math.abs(v),3)*Math.min(1,u*3);   // borde ligeramente ondulado
+      const z=v*w,o2=off*ct+z*st;
+      pos.push(cx+nx*o2,cy+ny*o2,z*ct-off*st);uv.push(um+(1-2*um)*(v+1)/2,um+(1-2*um)*u);
+    }
+  }
+  for(let i=0;i<nu;i++)for(let j=0;j<nv;j++){const a=i*(nv+1)+j,b=a+1,c=a+nv+1,d=c+1;idx.push(a,c,b,b,c,d);}
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+  geo.setIndex(idx);geo.computeVertexNormals();
+  if(!o.th)return geo;
+  // grosor: dos caras desplazadas según la normal y paredes laterales
+  const nr=geo.attributes.normal,n0=pos.length/3,th=o.th*0.5,pp=new Float32Array(n0*6),uu=new Float32Array(n0*4),ix=[];
+  for(let i=0;i<n0;i++){
+    for(let k=0;k<3;k++){const p=pos[i*3+k],n=nr.array[i*3+k];pp[i*3+k]=p+n*th;pp[(n0+i)*3+k]=p-n*th;}
+    uu[i*2]=uu[(n0+i)*2]=uv[i*2];uu[i*2+1]=uu[(n0+i)*2+1]=uv[i*2+1];
+  }
+  for(let k=0;k<idx.length;k+=3){ix.push(idx[k],idx[k+1],idx[k+2],n0+idx[k],n0+idx[k+2],n0+idx[k+1]);}
+  const edge=(a,b)=>{ix.push(a,b,n0+b,a,n0+b,n0+a);};
+  for(let i=0;i<nu;i++){edge(i*(nv+1),(i+1)*(nv+1));edge(i*(nv+1)+nv,(i+1)*(nv+1)+nv);}
+  for(let j=0;j<nv;j++){edge(j,j+1);edge(nu*(nv+1)+j,nu*(nv+1)+j+1);}
+  const g2=new THREE.BufferGeometry();
+  g2.setAttribute('position',new THREE.BufferAttribute(pp,3));g2.setAttribute('uv',new THREE.BufferAttribute(uu,2));
+  g2.setIndex(ix);g2.computeVertexNormals();return g2;
+}
+const gerSph=new THREE.SphereGeometry(1,48,24),gerFl=new THREE.SphereGeometry(1,10,8);
+const gerDome=new THREE.SphereGeometry(1,48,20,0,TAU,Math.PI/2,Math.PI/2);   // media esfera inferior: receptáculo
 const gerStemM=std(0x6f9c48,0.8);
-const gcOlive=std(0x7a7a22,0.8),gcDark=std(0xa8400a,0.8),gcMid=std(0xc8560e,0.8),gcOr=std(0xe89a14,0.7),gcYel=std(0xf4cf26,0.6);
+const gcGreen=new THREE.MeshStandardMaterial({color:0x5f8f3a,roughness:0.75,side:THREE.DoubleSide});
+// Centro de la gerbera (colores apagados, sin emissive)
+// ojo: marrón verdoso oscuro con textura rugosa de puntitos (también como relieve)
+const gcDisc=(()=>{
+  const c=document.createElement('canvas');c.width=c.height=128;
+  const x=c.getContext('2d');let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+  x.fillStyle='#2f2a14';x.fillRect(0,0,128,128);
+  for(let i=0;i<1400;i++){const v=r();x.fillStyle=v<0.5?'rgba(18,15,6,0.7)':(v<0.85?'rgba(70,62,30,0.6)':'rgba(96,84,38,0.5)');
+    x.beginPath();x.arc(r()*128,r()*128,0.6+r()*1.3,0,TAU);x.fill();}
+  const t=new THREE.CanvasTexture(c);
+  return new THREE.MeshStandardMaterial({map:t,bumpMap:t,bumpScale:0.004,roughness:0.95});
+})();
+const gcDiscB=std(0x221e0d,0.95),gcRingB=std(0xa8461a,0.9),gcPollen=std(0xf2c94c,0.85);
+// florecilla del anillo: tallito con un botón en la punta; color por vértice de naranja oscuro (base) a amarillo dorado apagado (punta)
+const gerFloretGeo=(()=>{
+  const g=new THREE.LatheGeometry([[0,0],[0.75,0],[0.62,0.45],[0.85,0.72],[0.72,0.95],[0.3,1.08],[0,1.1]].map(p=>new THREE.Vector2(p[0],p[1])),8);
+  const P=g.attributes.position,cl=[],c0=new THREE.Color(0xc9561e),c1=new THREE.Color(0xe0a93a),c=new THREE.Color();
+  for(let i=0;i<P.count;i++){const k=Math.min(1,Math.max(0,(P.getY(i)-0.35)/0.6));c.copy(c0).lerp(c1,k*k*(3-2*k));cl.push(c.r,c.g,c.b);}
+  g.setAttribute('color',new THREE.Float32BufferAttribute(cl,3));g.computeVertexNormals();return g;
+})();
+const gcFloret=new THREE.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:0.9});
 function makeGerbera(hx,hy,hz,scl,sh,mat,leaves,wmul){
   const g=new THREE.Group();world.add(g);
   const sp=stemTo(hx,hy,hz);
@@ -532,22 +658,99 @@ function makeGerbera(hx,hy,hz,scl,sh,mat,leaves,wmul){
   }
   const hd=new THREE.Group();hd.position.set(hx,hy,hz);aim(hd.quaternion,sp.getTangent(1),0.5,hz>0?0.5:0.15);
   hd.scale.setScalar(scl*(0.9+rnd()*0.2));g.add(hd);
-  gerLAY.forEach((ly,li)=>{
-    const geos=[0,1,2].map(k=>petalGeo({L:ly.L*(0.95+0.05*k),W:ly.W*1.15*(wmul||1),strap:true,nu:30,nv:8,thick:0.05,phi0:ly.phi0+(k-1)*0.06,curl:ly.curl+0.5,cup:0.9,wave:0.015,seed:li*3+k+sh}));
-    const nn=Math.round(ly.n/(wmul||1));
-    for(let i=0;i<nn;i++){
+  for(let i=0;i<73;i++)rnd();                    // mismo consumo de azar que el modelo anterior: el resto de flores no cambia
+  let gs=(sh*7919+101)%2147483647;const gr=()=>(gs=(gs*16807)%2147483647)/2147483647;
+  // pétalos grandes: láminas finas casi planas (pliegue central suave, borde ligeramente ondulado), casi horizontales
+  // con una curva muy suave hacia arriba (plato apenas cóncavo; ninguna punta cae por debajo de la horizontal).
+  // Irregularidad fija por pétalo: largo ±15 %, ancho ±20 %, ángulo alrededor del centro ±4°, inclinación ±10°, torsión ±12°
+  for(let i=0;i<44;i++){gr();gr();if(gr()<0.2)gr();gr();gr();gr();gr();}   // mismo consumo de azar que antes: brácteas y centro no cambian
+  let gb=(sh*4801+977)%2147483647;const gq=()=>(gb=(gb*16807)%2147483647)/2147483647;
+  const D=Math.PI/180;
+  const petalRing=(n,r0,y0,m,a0,P,rebels)=>{
+    for(let i=0;i<n;i++){
+      let L=P.L*(0.85+0.3*gq()),W=P.W*(0.8+0.4*gq()),phi0=P.phi0+(gq()-0.5)*20*D,tw=(gq()-0.5)*24*D,open=0.04,az=(gq()-0.5)*8*D,rx=0;
+      const rb=rebels[i];                                  // pétalos "rebeldes"
+      if(rb==='doblado'){open=-0.3;phi0-=0.05;}           // más doblado (se curva claramente hacia arriba)
+      if(rb==='corto'){L*=0.72;}                           // algo más corto
+      if(rb==='girado'){tw=0.55;rx=0.3;az+=3*D;}           // girado sobre su eje
+      if(rb==='levantado'){phi0-=0.3;}                     // algo más levantado
+      phi0=Math.min(phi0,Math.PI/2-0.05-Math.max(0,open));  // la punta nunca baja de la horizontal
       const h=new THREE.Group(),pv=new THREE.Group();
-      pv.position.set(0.15,li*0.025,0);pv.add(new THREE.Mesh(geos[i%3],mat));
-      h.add(pv);h.rotation.y=i/nn*TAU+li*0.17+(rnd()-0.5)*0.05;hd.add(h);
+      pv.position.set(r0,y0,0);pv.rotation.x=rx;
+      const notch=(i*5+sh+P.sd)%4===1?2:0;   // 1 de cada 4 con una pequeña muesca en la punta
+      pv.add(new THREE.Mesh(gerPetalGeo({L,W:W*1.13,phi0,open,tw,crease:0.15,ew:0.006,ef:12+gq()*6,th:0.006,uvm:0.02,almond:true,notch,sd:sh+i+P.sd}),m));   // 13 % más anchos: casi sin huecos
+      h.add(pv);h.rotation.y=(i+a0)/n*TAU+az;hd.add(h);angs.push(h.rotation.y);
+    }
+  };
+  const angs=[];   // ángulos de los pétalos ya colocados (para rellenar huecos después)
+  // segunda fila (detrás), más corta, más oscura y algo más levantada, asomando entre los huecos
+  petalRing(20,0.39,-0.035,gerM2,0.5,{L:0.78,W:0.1,phi0:1.27,sd:40},{7:'levantado'});
+  // corona principal: 24 pétalos
+  petalRing(24,0.42,0.008,mat,0,{L:0.9,W:0.115,phi0:1.36,sd:0},{3:'doblado',10:'corto',17:'girado'});
+  // relleno: 9 pétalos más por detrás, un 5 % más largos y algo más oscuros, solo en los 9 huecos más grandes entre pétalos
+  {
+    const A=angs.map(a=>((a%TAU)+TAU)%TAU).sort((p,q)=>p-q),gaps=[];
+    for(let k=0;k<A.length;k++){const a1=A[k],a2=k+1<A.length?A[k+1]:A[0]+TAU;gaps.push([a2-a1,(a1+a2)/2]);}
+    gaps.sort((p,q)=>q[0]-p[0]);
+    for(let k=0;k<9;k++){
+      const L=0.9*1.05*(0.85+0.3*gq()),W=0.115*(0.8+0.4*gq()),phi0=Math.min(1.33+(gq()-0.5)*20*D,Math.PI/2-0.09),tw=(gq()-0.5)*24*D;
+      const h=new THREE.Group(),pv=new THREE.Group();
+      pv.position.set(0.38,-0.05,0);
+      const notch=(k*5+sh+70)%4===1?2:0;
+      pv.add(new THREE.Mesh(gerPetalGeo({L,W:W*1.13,phi0,open:0.04,tw,crease:0.15,ew:0.006,ef:12+gq()*6,th:0.006,uvm:0.02,almond:true,notch,sd:sh+k+70}),gerM3));
+      h.add(pv);h.rotation.y=gaps[k][1];hd.add(h);
+    }
+  }
+  // base por detrás: receptáculo verde en cúpula con 2 filas de brácteas finas y puntiagudas
+  const rec=new THREE.Mesh(gerDome,gcGreen);rec.scale.set(0.42,0.24,0.42);hd.add(rec);
+  [{n:16,r:0.38,y:-0.1,L:0.26,phi0:1.5,a0:0},{n:14,r:0.28,y:-0.18,L:0.22,phi0:1.2,a0:0.5}].forEach((b,bi)=>{
+    const bg=[0,1,2].map(k=>petalGeo({L:b.L*(0.9+0.1*k),W:0.028,phi0:b.phi0,curl:-0.25,cup:0.2,wave:0.004,nu:16,nv:4,seed:sh+k+bi*3+60}));
+    for(let i=0;i<b.n;i++){
+      const h=new THREE.Group(),pv=new THREE.Group();
+      pv.position.set(b.r,b.y,0);pv.rotation.x=(gr()-0.5)*0.2;pv.add(new THREE.Mesh(bg[i%3],gcGreen));
+      h.add(pv);h.rotation.y=(i+b.a0)/b.n*TAU+(gr()-0.5)*0.15;hd.add(h);
     }
   });
-  const cal=ell(gerStemM,0.2,0.13,0.2);cal.position.y=-0.1;hd.add(cal);
-  hd.add(ell(gcDark,0.3,0.1,0.3));
-  for(let i=0;i<50;i++){
-    const r2=0.3*Math.sqrt((i+0.5)/50),a=i*2.39996,k=r2/0.3;
-    const f=new THREE.Mesh(gerFl,i<10?gcOlive:(k>0.8?gcYel:(k>0.55?gcOr:(k>0.25?gcMid:gcDark))));
-    f.scale.setScalar(0.05);f.position.set(Math.cos(a)*r2,0.095*(1-k*k)+0.02,Math.sin(a)*r2);hd.add(f);
+  // ===== centro, de dentro hacia fuera =====
+  const yb=r=>0.07*Math.sqrt(Math.max(0,1-Math.pow(r/0.43,2)));   // altura de la base abombada
+  const base=new THREE.Mesh(gerSph,gcRingB);base.scale.set(0.43,0.07,0.43);hd.add(base);   // base naranja oscuro bajo las florecillas
+  // ojo central: el doble que antes, ligeramente abombado y rugoso
+  const ER=0.16,EY=0.05,EH=0.05;
+  const disc=new THREE.Mesh(gerSph,gcDisc);disc.scale.set(ER,EH,ER);disc.position.y=EY;hd.add(disc);
+  const dm=new THREE.Object3D(),ND=LOWQ?90:160,iD=new THREE.InstancedMesh(gerFl,gcDiscB,ND);
+  for(let i=0;i<ND;i++){
+    const r2=(ER-0.008)*Math.sqrt((i+gr())/ND),a=i*2.39996+gr()*0.4;
+    dm.position.set(Math.cos(a)*r2,EY+EH*Math.sqrt(Math.max(0,1-Math.pow(r2/ER,2))),Math.sin(a)*r2);
+    const sz=0.005+gr()*0.004;dm.scale.set(sz,sz*0.7,sz);dm.updateMatrix();iD.setMatrixAt(i,dm.matrix);
   }
+  // anillo de florecillas (ancho ≈ radio del ojo): muy apretadas, apuntando hacia arriba, como un cepillo
+  const R0=ER-0.01,R1=0.33,NF=LOWQ?150:240,iF=new THREE.InstancedMesh(gerFloretGeo,gcFloret,NF);
+  const NP=LOWQ?24:40,iP=new THREE.InstancedMesh(gerFl,gcPollen,NP),tips=[];
+  const up=new THREE.Vector3(0,1,0),dir=new THREE.Vector3();
+  for(let i=0;i<NF;i++){
+    const k=(i+gr())/NF,r2=Math.sqrt(R0*R0+(R1*R1-R0*R0)*k),a=i*2.39996+(gr()-0.5)*0.15;
+    const hgt=(0.045+gr()*0.025)*(0.85+0.3*(r2-R0)/(R1-R0)),rad=0.012+gr()*0.005;
+    const ox=Math.cos(a),oz=Math.sin(a),lean=0.12+0.3*(r2-R0)/(R1-R0)+(gr()-0.5)*0.25;   // hacia arriba, algo abiertas hacia fuera
+    dir.set(ox*Math.sin(lean)+(gr()-0.5)*0.15,Math.cos(lean),oz*Math.sin(lean)+(gr()-0.5)*0.15).normalize();
+    dm.position.set(ox*r2,yb(r2)-0.004,oz*r2);dm.quaternion.setFromUnitVectors(up,dir);dm.scale.set(rad,hgt,rad);
+    dm.updateMatrix();iF.setMatrixAt(i,dm.matrix);
+    tips.push(dm.position.clone().addScaledVector(dir,hgt*1.05));
+  }
+  dm.quaternion.identity();
+  for(let i=0;i<NP;i++){   // puntitos de polen repartidos de forma irregular sobre las florecillas
+    const p=tips[Math.floor(gr()*tips.length)];dm.position.set(p.x+(gr()-0.5)*0.01,p.y+0.003,p.z+(gr()-0.5)*0.01);
+    const sz=0.004+gr()*0.004;dm.scale.set(sz,sz,sz);dm.updateMatrix();iP.setMatrixAt(i,dm.matrix);
+  }
+  [iD,iF,iP].forEach(m=>{m.frustumCulled=false;m.instanceMatrix.needsUpdate=true;hd.add(m);});
+  // corona de transición: 2 filas de pétalos cortos (≈ 20 % del largo de los grandes), del mismo rojo, algo levantados e irregulares
+  [{n:30,r:0.3,L:0.15,W:0.03,phi0:0.85,a0:0},{n:34,r:0.34,L:0.19,W:0.034,phi0:1.05,a0:0.5}].forEach((q,qi)=>{
+    for(let i=0;i<q.n;i++){
+      const h=new THREE.Group(),pv=new THREE.Group();
+      pv.position.set(q.r,yb(q.r)-0.004,0);
+      pv.add(new THREE.Mesh(gerPetalGeo({L:q.L*(0.8+0.4*gr()),W:q.W*(0.85+0.3*gr()),phi0:q.phi0+(gr()-0.5)*0.35,open:0.1,tw:(gr()-0.5)*0.4,crease:0.12,nu:16,nv:6,uvm:0.02,sd:sh+i+qi*50+200}),mat===gerM1?gerMc:mat));
+      h.add(pv);h.rotation.y=(i+q.a0+(gr()-0.5)*0.5)/q.n*TAU;hd.add(h);
+    }
+  });
 }
 
 // ===== Claveles: rosa pálido con borde rosa más oscuro (picotee), aspecto empolvado =====
@@ -824,7 +1027,7 @@ for(let i=0;i<420;i++){btX.fillStyle=i%3?'#c9d04e':'#5f7a1c';btX.beginPath();btX
 const btM=new THREE.MeshStandardMaterial({map:new THREE.CanvasTexture(btC),roughness:0.75});
 const DLAY=[{n:17,L:0.95,W:0.25,phi0:1.42,curl:-0.3,r:0.13,y:0},{n:8,L:0.42,W:0.14,phi0:0.55,curl:0.2,r:0.09,y:0.05}];
 function mulb(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
-function makeDaisy(hx,hy,hz,scl,sh,opt){   // opt.toward + opt.angle: inclina un poco la cabeza hacia esa dirección
+function makeDaisy(hx,hy,hz,scl,sh,opt){   // opt.toward + opt.angle: inclina un poco la cabeza hacia esa dirección; opt.up: eje de la cabeza
   const R2=mulb(7000+sh*131);   // azar propio de la margarita: no altera la secuencia aleatoria del resto de flores
   const g=new THREE.Group();world.add(g);
   const sp=stemTo(hx,hy,hz);
@@ -834,6 +1037,7 @@ function makeDaisy(hx,hy,hz,scl,sh,opt){   // opt.toward + opt.angle: inclina un
   if(opt&&opt.toward){const upv=new THREE.Vector3(0,1,0).applyQuaternion(hd.quaternion),tw=new THREE.Vector3(opt.toward[0],opt.toward[1],opt.toward[2]).normalize(),ax=new THREE.Vector3().crossVectors(upv,tw);
     if(ax.lengthSq()>1e-6)hd.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(ax.normalize(),opt.angle));}
   hd.scale.setScalar(scl*(0.9+rnd()*0.2));g.add(hd);
+  if(opt&&opt.up)hd.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),opt.up.clone().normalize());   // opt.up: eje de la cabeza (como en makeLisianthus)
   for(let i=0;i<15;i++)rnd();   // mantiene intacta la secuencia aleatoria del resto de la escena
   const open=(sh===5||sh===9||sh===12)?0.88:0.95+R2()*0.12;   // 2-3 algo menos abiertas, sin llegar a cerrarse en embudo   // 3 margaritas algo menos abiertas
   DLAY.forEach((ly,li)=>{
@@ -1012,13 +1216,13 @@ makeDaisy(1.61,4.19,-2.21,0.74,5,{toward:[0,0,1],angle:0.5});   // subida un 15 
 makeDaisy(-1.92,3.95,-1.22,0.81,6);   // subida al nivel de las flores de alrededor (antes y=3,27); 0,42 hacia el eje: antes atravesaba el papel
 makeDaisy(0.53,2.44,2.81,0.85,7);
 makeDaisy(-1.14,2.40,2.79,0.81,8);   // subida 0,4 y 0,1 hacia fuera: apoyada sobre el borde del papel blanco interior
-{ const s0=seed; makeGerbera(1.1,4.9,-0.52,0.6,9,gerM1,true); seed=s0; for(let i=0;i<16;i++)rnd(); }   // gerbera en lugar de la margarita (antes makeDaisy(1.6,7,-0.39,0.81,9)); se restaura el azar para no alterar el resto de flores
-makeDaisy(1.7,2.23,-1.56,0.81,10);
-makeDaisy(-0.57,2.27,-2.23,0.81,11);
-makeDaisy(0.92,2.34,-2.26,0.81,12);
-makeDaisy(0.81,3.52,0.34,0.81,13);
+{ const s0=seed; makeGerbera(1.1,4.9,-0.52,0.8,9,gerM1,true); seed=s0; for(let i=0;i<16;i++)rnd(); }   // gerbera en lugar de la margarita (antes makeDaisy(1.6,7,-0.39,0.81,9)); se restaura el azar para no alterar el resto de flores
+makeDaisy(2.04,3.4,-1.72,0.70,10,{up:new THREE.Vector3(0.60,0.88,-0.34)});
+makeDaisy(-0.2,4.6,-0.23,0.7,11);
+makeDaisy(0.92,4.2,-3,0.81,12,{up:new THREE.Vector3(0,0.45,-0.89)});
+makeDaisy(1.55,4.2,0.04,0.7,13,{up:new THREE.Vector3(0.9,0.35,0.25)});
 makeDaisy(2.5,3.52,0.4,0.81,14,{toward:[-0.2,-0.45,-1.11],angle:0.1});   // margarita: a la profundidad de la rosa de arriba, en el hueco entre el lirio y esa rosa
-makeLily(-1.69,0.96,2.233,0,'rosa',1,1.12,3,new THREE.Vector3(-0.24,0.80,0.56));
+makeLily(-1.95,1.0,3.0,0,'rosa',1,1.12,3,new THREE.Vector3(-0.45,0.5,0.75));   // en el hueco de la izquierda, entre la rosa blanca y las margaritas, mirando al frente y algo a la izquierda
 makeLily(1.72,0.87,3.3,0,'rosa',1,1.12,4,new THREE.Vector3(0.24,0.80,0.56));
 makeFoliage(-1.28,2.27,-1.92,1.10,21,1);
 makeFoliage(-2.17,2.09,0.71,1.20,22,1);
@@ -1339,7 +1543,7 @@ function tailCurve(sx,len,ph,spread){
 // Interacción
 let drag=false,lastX=0,lastY=0,tilt=0.42,zoom=13;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const AUTO_ROTATE=false; // pon false para quitar la rotación automática
+const AUTO_ROTATE=true; // pon false para quitar la rotación automática
 // Un dedo (o el ratón) gira el ramo; dos dedos hacen zoom de pellizco; la rueda del ratón también hace zoom
 const ptrs=new Map();let pinch0=0,zoom0=13;
 const ZMIN=3.5,ZMAX=16;

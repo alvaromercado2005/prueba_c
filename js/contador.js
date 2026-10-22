@@ -152,7 +152,7 @@ const MENSAJES_BLOQUEO = [
     'Lo bueno se hace esperar ✨',
     'Ni lo intentes, que te conozco 😏',
     'Cada segundo falta menos 🤍',
-    'Todavía no… pero va a merecer la pena 💙'
+    'Todavía no… pero va a merecer la pena 🤍'
 ];
 let ultimoMensaje = -1;
 let temporizadorMensaje = null;
@@ -263,7 +263,7 @@ function desbloquear() {
     btnEntrar.classList.add('desbloqueado');
     btnEntrar.removeAttribute('aria-disabled');
     btnCandado.remove();
-    btnTexto.textContent = 'Abrir sorpresas 💙';
+    btnTexto.textContent = 'Abrir sorpresas 🤍';
 
     elemMensajeBloqueo.classList.remove('visible');
     elemNota.classList.add('escondida');
@@ -287,7 +287,7 @@ function desbloquear() {
 // EXPLOSIÓN DE CORAZONES Y CONFETI
 // ==========================================================
 const COLORES_CONFETI = ['#6cb4ee', '#2f6db5', '#1f3550', '#ffffff', '#cfe3f7'];
-const CORAZONES = ['🤍', '💙'];
+const CORAZONES = ['🤍'];
 
 function explosion(x, y, cantidad, conConfeti) {
     if (reducirMovimiento) return;

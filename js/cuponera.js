@@ -1,12 +1,13 @@
 const listaCupones = [
-    { id: 1, titulo: "Cena romántica", desc: "Elegimos el sitio que tú quieras." },
-    { id: 2, titulo: "Masaje relajante", desc: "De 20 minutos con aceites." },
-    { id: 3, titulo: "Película y palomitas", desc: "Tú mandas sobre la elección de la peli." },
+    { id: 1, titulo: "Cena romántica", desc: "Cena en el restaurante que tú elijas." },
+    { id: 2, titulo: "Masaje relajante", desc: "Masaje de 30 minutos" },
+    { id: 3, titulo: "Cine", desc: "pelicula que tu elijas y palomitas " },
     { id: 4, titulo: "Abrazo infinito", desc: "Canjeable en cualquier momento del día." },
-    { id: 5, titulo: "Capricho dulce", desc: "Tu postre o antojo favorito invitado por mí." },
-    { id: 6, titulo: "Paseo sin rumbo", desc: "Hacer lo que surja sin mirar el reloj." },
-    { id: 7, titulo: "Elegir música", desc: "Veto total a mis canciones durante un viaje." },
-    { id: 8, titulo: "Desayuno en la cama", desc: "Preparado con todo el amor del mundo." }
+    { id: 5, titulo: "Capricho dulce", desc: "Vale por una bolsa de platanos" },
+    { id: 6, titulo: "Ir a ver los patos", desc: "Vamos a la fuencisla o al pantano a ver los lagos" },
+    { id: 7, titulo: "atardecer en un sitio nuevo", desc: "lugar nuevo a donde nunca hemos ido " },
+    { id: 8, titulo: "te cocino yo", desc: "te cocino lo que quieras" }
+    
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <h3 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; color: var(--accent-pink);">${cupon.titulo}</h3>
                 <p style="font-size: 0.7rem; color: var(--texto-secundario); margin-bottom: 12px;">${cupon.desc}</p>
                 <button class="btn-canjear" data-id="${cupon.id}" ${gastado ? 'disabled' : ''}>
-                    ${gastado ? 'Gastado ✖' : 'Canjear 💖'}
+                    ${gastado ? 'Gastado ✖' : 'Canjear 🤍'}
                 </button>
             `;
 
