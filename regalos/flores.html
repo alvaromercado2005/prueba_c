@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lirio</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Playfair+Display:ital,wght@1,400;1,500&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap">
 <style>
 :root{--bg1:#eaf3fc;--bg2:#bcd7f1;--ink:#1f3550;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -20,25 +20,35 @@ button{font:inherit;font-size:.95rem;color:var(--ink);background:transparent;bor
 button[aria-pressed="true"]{opacity:1;background:var(--ink);color:var(--bg1)}
 button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* ===== Intro antes del ramo ===== */
-#intro{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 50% 45%,#2b0a1d 0%,#16050f 45%,#050104 80%,#000 100%);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;outline:none;transition:opacity 2.5s ease}
+#intro{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 50% 45%,#f7fbff 0%,#e3effb 55%,#cfe3f7 100%);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;outline:none;transition:opacity 2.5s ease}
 #intro.fuera{opacity:0;pointer-events:none}
 #intro.rapido{transition-duration:1.4s}
 #petalos{position:fixed;inset:0;width:100%;height:100%;z-index:55;pointer-events:none;transition:opacity 3s ease}
 .intro-abrir{text-align:center;padding:0 24px;transition:opacity 1s ease,transform 1s ease}
 .intro-abrir.fuera{opacity:0;transform:translateY(-12px)}
-.intro-abrir p{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.9rem,8vw,2.7rem);color:#F3E9D2;animation:latir 3.2s ease-in-out infinite}
-@keyframes latir{0%,100%{opacity:.8;text-shadow:0 0 6px rgba(243,233,210,.2),0 0 16px rgba(243,233,210,.08)}50%{opacity:1;text-shadow:0 0 12px rgba(243,233,210,.6),0 0 32px rgba(244,167,185,.35)}}
-.intro-flor{display:block;width:28px;height:28px;margin:16px auto 0;opacity:.8}
-.intro-texto{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);padding:0 28px;text-align:center;pointer-events:none}
-.intro-linea{margin:0 auto .4em;max-width:560px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.4rem,6vw,2.1rem);line-height:1.4;color:#F3E9D2;text-shadow:0 0 14px rgba(243,233,210,.22);opacity:0;transform:translateY(14px);transition:opacity 1.8s ease,transform 1.8s ease}
-.intro-linea.ver{opacity:1;transform:none}
-.intro-fecha{margin-top:1.5em;font-size:clamp(.95rem,3.8vw,1.15rem);letter-spacing:.3em}
-.intro-fecha.ver{opacity:.75}
+.intro-pulsa{margin:0;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(2.6rem,11vw,4.2rem);line-height:1.1;color:#1f3550;animation:latir 3.2s ease-in-out infinite}
+@keyframes latir{0%,100%{opacity:.82;text-shadow:0 0 6px rgba(59,130,196,.15),0 0 16px rgba(59,130,196,.08)}50%{opacity:1;text-shadow:0 0 12px rgba(59,130,196,.4),0 0 32px rgba(108,180,238,.35)}}
+/* corazón que late suavemente bajo el texto */
+.intro-corazon{display:block;width:max-content;margin:16px auto 0;font-size:clamp(1.8rem,7.5vw,2.4rem);line-height:1;font-style:normal;filter:drop-shadow(0 1px 3px rgba(31,53,80,.25)) drop-shadow(0 0 10px rgba(108,180,238,.45));animation:latido 1.6s ease-in-out infinite}
+@keyframes latido{0%,100%{transform:scale(1)}14%{transform:scale(1.14)}28%{transform:scale(1)}42%{transform:scale(1.1)}70%{transform:scale(1)}}
+/* aviso de volumen: pequeño y discreto */
+.intro-aviso{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));margin:0;font-family:'Montserrat',sans-serif;font-size:clamp(.9rem,3.8vw,1.02rem);letter-spacing:.05em;color:#5a7491;opacity:.85;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:none}
+.intro-aviso svg{width:17px;height:17px;flex:none}
+.intro-abrir.fuera~.intro-aviso{opacity:0;transition:opacity 1s ease}
+/* mensaje: frases grandes y elegantes, adaptadas a móvil y ordenador */
+.intro-texto{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);padding:0 clamp(22px,6vw,48px);text-align:center;pointer-events:none}
+.intro-linea{margin:0 auto .55em;max-width:min(92vw,680px);font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.55rem,6.4vw,2.7rem);line-height:1.32;color:#1f3550;text-wrap:balance;text-shadow:0 0 18px rgba(108,180,238,.28);opacity:0;transform:translateY(14px);filter:blur(4px);transition:opacity 1.8s ease,transform 1.8s ease,filter 1.8s ease}
+.intro-linea.ver{opacity:1;transform:none;filter:none}
+.intro-linea.destaca{font-weight:500;font-size:clamp(1.8rem,7.4vw,3.1rem)}
+.intro-fecha{margin-top:1.4em;font-family:'Montserrat',sans-serif;font-style:normal;font-weight:400;font-size:clamp(.85rem,3.4vw,1.05rem);letter-spacing:.38em;color:#5a7491;text-shadow:none;display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vw,18px)}
+.intro-fecha::before,.intro-fecha::after{content:"";width:clamp(28px,9vw,60px);height:1px;background:linear-gradient(90deg,transparent,#6cb4ee)}
+.intro-fecha::after{background:linear-gradient(90deg,#6cb4ee,transparent)}
+.intro-fecha.ver{opacity:.85}
 /* --- Controles: sonido y volver al menú --- */
 .ctrl{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));z-index:70;opacity:0;pointer-events:none;transition:opacity 1s ease,color .8s ease,background .8s ease,border-color .8s ease;-webkit-tap-highlight-color:transparent}
 .ctrl.ver{opacity:.85;pointer-events:auto}
 .ctrl.ver:hover{opacity:1}
-#btnSonido{right:14px;width:40px;height:40px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#F3E9D2;background:rgba(255,255,255,.08);border:1px solid rgba(243,233,210,.35);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#btnSonido{right:14px;width:40px;height:40px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);background:rgba(255,255,255,.6);border:1px solid rgba(31,53,80,.2);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 #btnSonido svg{width:20px;height:20px}
 #btnSonido .on-x{display:none}
 #btnSonido[aria-pressed="true"] .on-x{display:inline}
@@ -49,24 +59,25 @@ body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);bo
 </head>
 <body>
 <canvas id="c" aria-label="Lirio en 3D"></canvas>
-<!-- DESACTIVADO INTRO (intro, pétalos y audio)
+
 <div id="intro" role="button" tabindex="0" aria-label="Toca para abrir">
   <div class="intro-abrir">
-    <p>Toca para abrir</p>
-    <svg class="intro-flor" viewBox="0 0 24 24" aria-hidden="true"><g fill="#F3E9D2" opacity=".85"><ellipse cx="12" cy="6.6" rx="3" ry="4.8"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(72 12 12)"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(144 12 12)"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(216 12 12)"/><ellipse cx="12" cy="6.6" rx="3" ry="4.8" transform="rotate(288 12 12)"/></g><circle cx="12" cy="12" r="2.4" fill="#f4a7b9"/></svg>
+    <p class="intro-pulsa">Toca para abrir</p>
+    <span class="intro-corazon" aria-hidden="true">🤍</span>
   </div>
+  <p class="intro-aviso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>Sube el volumen del móvil</p>
   <div class="intro-texto" aria-live="polite">
     <p class="intro-linea">Llevabas mucho, mucho tiempo sin verlo…</p>
     <p class="intro-linea">pero desde hoy podrás verlo para siempre,</p>
-    <p class="intro-linea">como el primer día.</p>
+    <p class="intro-linea destaca">como el primer día.</p>
     <p class="intro-linea intro-fecha">29 · 06 · 2026</p>
   </div>
 </div>
 <canvas id="petalos" aria-hidden="true"></canvas>
-<audio id="cancion" src="../fotos/cancion.mp3" preload="auto"></audio> -->
+<audio id="cancion" src="../fotos/cancion.mp3" preload="auto"></audio>
 <button id="btnSonido" class="ctrl" type="button" aria-label="Silenciar música" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="on-ondas" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="on-x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
-<a id="btnMenu" class="ctrl" href="../menu.html">‹ Menú</a>
-<!-- DESACTIVADO INTRO (script de intro y música)
+<a id="btnMenu" class="ctrl ver" href="../menu.html">‹ Menú</a>
+
 <script>
 // ===== Intro antes del ramo: pétalos, texto, música y transición =====
 (function(){
@@ -81,7 +92,7 @@ body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);bo
   let W=0,H=0;
   function tam(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;pc.width=W*d;pc.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
   addEventListener('resize',tam);tam();
-  const COLS=['#f4a7b9','#f7c6d1','#ec8fa8','#F3E9D2','#fbefe2'];
+  const COLS=['#ffffff','#ffffff','#fbfdff','#f7faff','#ffffff'];   // pétalos blancos
   let recicla=true,vivos=true;
   function nuevo(p,arriba){
     p.x0=Math.random()*W;p.y=arriba?-20-Math.random()*H*0.25:Math.random()*H;
@@ -200,15 +211,12 @@ body.ramo-visible #btnSonido{color:var(--ink);background:rgba(255,255,255,.6);bo
     },dur);
   }
   function tocar(){
-    if(estado==='espera')empezar();
-    else if(estado==='texto'){saltado=true;timers.forEach(clearTimeout);intentar();}
-    else if(estado==='revelando'&&!revelado){saltado=true;clearTimeout(revTimer);revelar();}
+    if(estado==='espera')empezar();   // solo el primer toque cuenta: el mensaje no se puede saltar
   }
   intro.addEventListener('click',tocar);
   intro.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tocar();}});
 })();
 </script>
-FIN DESACTIVADO INTRO -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -1118,6 +1126,55 @@ function makeLily(x,z,hy,tx,k,open,sc,sh,dv){
   }
 }
 
+// ===== Capullo de lirio cerrado (modelo sencillo): esfera estirada en gota alargada, punta redondeada, color por vértices =====
+// satinado suave (roughness 0,45) con algo de translucidez (luz más clara en los bordes); el color viene de los vértices
+const budM=softify(new THREE.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:0.45,metalness:0}),0.25);
+function budGeo(L,v){   // v: 0, 1, 2… pequeña variación de tono, curva y asimetría entre capullos
+  const g=new THREE.SphereGeometry(1,48,48),P=g.attributes.position,col=[];
+  const cBase=new THREE.Color(0x8daf55),cBody=new THREE.Color(0xb8cf7a),cTip=new THREE.Color(0xdde6a8),cSeam=new THREE.Color(0x6b8a3a),cVein=new THREE.Color(0x9db860),cStem=lilyStemM.color.clone(),c=new THREE.Color(),s=L/9;
+  const dh=[0,0.012,-0.01][v%3],dl=[0,-0.02,0.015][v%3];                       // variación de tono entre capullos
+  const bang=v*2.3+0.4,bend=(5+1.5*(v%3))*Math.PI/180,ax=1+0.05*Math.cos(v*1.7),az=1-0.05*Math.cos(v*1.7);   // curva de 5–8° y algo de asimetría
+  for(let i=0;i<P.count;i++){
+    let x=P.getX(i),y=P.getY(i)*4.5,z=P.getZ(i);               // estirada ×4,5 en altura
+    if(y<0){const f=1-0.65*(-y/4.5);x*=f;z*=f;}                 // mitad inferior: se estrecha de 1 (centro) a 0,35 (base)
+    const u=(y+4.5)/9,a=Math.atan2(z,x);                         // u: 0 en la base, 1 en la punta
+    if(u>0.8){   // último 20 %: se estrecha progresivamente hasta cerrarse en una punta redondeada de bala (sin cara plana), sin quiebro con el cuerpo
+      const t=(u-0.8)/0.2,rT=0.8*Math.sqrt(Math.max(0,1-Math.pow(t,2.2)))*(1-0.375*t),rC=Math.hypot(x,z);
+      if(rC>1e-6){x*=rT/rC;z*=rT/rC;}
+    }
+    const tw=(25*Math.PI/180)*Math.pow(Math.min(1,Math.max(0,(u-0.6)/0.4)),1.6),ac=a-tw;   // las costuras giran en espiral ~25° al llegar a la punta
+    const fadeT=Math.min(1,Math.max(0,(0.96-u)/0.08));            // las líneas llegan hasta cerca de la punta y se desvanecen sin abrirla
+    const seam=Math.pow(Math.max(0,Math.cos(3*ac)),50)*Math.min(1,u*5)*fadeT;   // 3 costuras principales a 120°
+    const vein=Math.pow(Math.max(0,Math.cos(12*ac)),60)*(1-Math.pow(Math.max(0,Math.cos(3*ac)),6))*Math.min(1,u*6)*fadeT;   // 3 vetas finas entre cada par de costuras
+    const k=(1-0.05*seam-0.008*vein)*1.3;x*=k*ax;z*=k*az;        // costuras algo más hundidas; 30 % más gruesos (solo en ancho); sección un poco asimétrica
+    const b=bend*9*u*u/2;x+=Math.cos(bang)*b;z+=Math.sin(bang)*b;   // ligera curva de todo el capullo
+    if(u<0.45)c.copy(cBase).lerp(cBody,u/0.45);else c.copy(cBody).lerp(cTip,Math.pow((u-0.45)/0.55,1.4));   // base verde → centro lima → punta más clara
+    if(u>0.8)c.lerp(cTip,0.6*Math.min(1,(u-0.8)/0.15));          // punta algo más clara y amarillenta (#DDE6A8)
+    if(u<0.12)c.lerp(cStem,1-u/0.12);                             // unión: degradado del verde del tallo al del capullo
+    c.lerp(cVein,0.6*vein);                                     // vetas finas, algo más oscuras que el fondo
+    c.lerp(cSeam,0.9*seam);                                     // costuras de un verde más oscuro
+    c.offsetHSL(dh,0,dl);
+    col.push(c.r,c.g,c.b);
+    P.setXYZ(i,x*s,(y+4.5)*s*1.2,z*s);                            // base del capullo en el origen; un 20 % más largo sin cambiar el grosor
+  }
+  g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
+  // la esfera repite vértices en la punta y en la costura de la malla: se promedian sus normales para que la superficie quede lisa, sin grietas ni picos
+  const N=g.attributes.normal,acc=new Map();
+  for(let i=0;i<P.count;i++){const kk=P.getX(i).toFixed(5)+','+P.getY(i).toFixed(5)+','+P.getZ(i).toFixed(5);let e=acc.get(kk);if(!e)acc.set(kk,e=[0,0,0,[]]);e[0]+=N.getX(i);e[1]+=N.getY(i);e[2]+=N.getZ(i);e[3].push(i);}
+  acc.forEach(e=>{const l=Math.hypot(e[0],e[1],e[2])||1;e[3].forEach(i=>N.setXYZ(i,e[0]/l,e[1]/l,e[2]/l));});
+  return g;
+}
+// x, y (altura), z: base del capullo; L: largo; dir: hacia dónde apunta; v: variación (0, 1, 2…)
+function makeBud(x,y,z,L,dir,v){
+  const g=new THREE.Group();world.add(g);
+  // tallo (mismo grosor y material que los lirios abiertos): una sola curva continua desde el atado que, al final, sigue el eje del capullo
+  // y entra un poco en su base, donde el capullo tiene ya el mismo grosor que el tallo (unión sin escalón)
+  const d=dir.clone().normalize(),B=new THREE.Vector3(x,y,z),sp=stemTo(x,y,z).points;
+  const pts=[sp[0],sp[1],sp[2],sp[3],B.clone().addScaledVector(d,-0.75),B.clone().addScaledVector(d,-0.3),B.clone().addScaledVector(d,0.1)];
+  g.add(stemMesh(new THREE.CatmullRomCurve3(pts),48,0.04,8,lilyStemM,true));
+  const m=new THREE.Mesh(budGeo(L,v||0),budM);m.position.copy(B);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d);g.add(m);
+}
+
 // ===== Ruscus italiano: ramitas que nacen dentro del ramo, entre las flores, a distintas profundidades =====
 function ruscusTexture(){
   const c=document.createElement('canvas');c.width=64;c.height=128;
@@ -1209,7 +1266,7 @@ world.remove(world.children[world.children.length-1]);   // clavel de abajo quit
 makeLisianthus(-2.49,3.48,-0.08,0.70,1);   // bajada un 5 % (antes y=3,62) y 0,25 hacia delante (antes z=-0,33)
 makeLisianthus(2.3,3.5,-0.71,0.75,2);
 makeLisianthus(2.3,2.2,0.6,0.78,2.6);
-makeLisianthus(0.45,4.07,-2.05,0.75,4,{up:new THREE.Vector3(0,Math.cos(0.35),Math.sin(0.35))});   // movida 0,8 más atrás (antes z=-1,25) y 0,5 a la izquierda (antes x=0,95); metida 0,3 hacia dentro y girada: mira arriba y ~20° al frente
+makeLisianthus(0.45,4.07,-2.05,0.75,4,{up:new THREE.Vector3(0,Math.cos(-0.44),Math.sin(-0.44))});
 makeDaisy(-0.63,4.43,-1.14,0.81,1);
 makeDaisy(-0.86,4.15,-2.05,0.81,4);   // un poco arriba y a la derecha (antes x=-1,46, y=4)
 makeDaisy(1.61,4.19,-2.21,0.74,5,{toward:[0,0,1],angle:0.5});   // subida un 15 % (antes y=3,64) e inclinada un poco hacia delante
@@ -1282,6 +1339,10 @@ makeFoliage(-2.38,2.69,0.21,1.15,504,2);
 { const _s4=seed;
   makeFoliage(-1.03,2.89,-0.13,1.0,641,2);makeBaby(-1.84,2.29,-0.56,642);makeBaby(-1.15,3.97,-0.4,643);   // 3 hojas y paniculata que tapan los tallos entre las margaritas y la rosa blanca
   seed=_s4; }
+// 3 capullos de lirio cerrados (una sola pieza, verdes con la punta rosada)
+makeBud(1.4,4,-1.3,1.28,new THREE.Vector3(0.7,0.65,-0.15),0);    // arriba a la derecha: base entre las margaritas del borde, sale hacia fuera y arriba
+makeBud(-1.2,3.8,1,1.28,new THREE.Vector3(-0.6,0.6,0.5),1);     // arriba a la izquierda, detrás de la rosa blanca: sale hacia fuera y arriba
+//makeBud(1,3.7,0.5,1.28,new THREE.Vector3(-0.2,0.6,0.5),2);    // abajo a la derecha, entre las dos rosas: hacia fuera y algo abajo
 bakeDots(BW,fillW);bakeDots(BL,fillL);
 
 // ===== Papel amarillo mantequilla, mate y opaco: dos láminas abiertas en abanico, bordes rectos y angulosos =====
