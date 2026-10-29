@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Protección: si todavía no ha llegado la fecha, vuelve al contador -->
+    <script src="js/config.js"></script>
+    <script>
+        if (!sorpresaDisponible()) {
+            document.documentElement.style.visibility = 'hidden';
+            location.replace('index.html');
+        }
+    </script>
+    <title>Tus Regalos 💖</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="pagina-menu">
+
+    <div class="container">
+        <h1>Elige tu sorpresa</h1>
+        <p class="subtitulo">Toca cada regalo para abrirlo
+            <svg class="dedicatoria-corazon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </p>
+
+        <div class="regalos-grid">
+
+
+            <a href="regalos/fotos.html" class="tarjeta-regalo cerrado" data-id="fotos">
+                <div class="envoltorio">
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">📸</span>
+                    <h3>Nuestros Recuerdos</h3>
+                    <p>Nuestra galería de fotos</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
+            </a>
+
+            <a href="regalos/carta.html" class="tarjeta-regalo cerrado" data-id="carta">
+                <div class="envoltorio">
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">💌</span>
+                    <h3>Carta Abierta</h3>
+                    <p>Palabras directas al corazón</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
+            </a>
+
+            <a href="regalos/cuponera.html" class="tarjeta-regalo cerrado" data-id="cuponera">
+                <div class="envoltorio">
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">🎟️</span>
+                    <h3>Cuponera de Vales</h3>
+                    <p>Canjeables por momentos únicos</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
+            </a>
+
+            <a href="regalos/razones.html" class="tarjeta-regalo cerrado" data-id="razones">
+                <div class="envoltorio">
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">✨</span>
+                    <h3>Razones para Amarte</h3>
+                    <p>Todo lo que amo de ti</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
+            </a>
+
+            <a href="regalos/musica.html" class="tarjeta-regalo cerrado" data-id="musica">
+                <div class="envoltorio">
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">🎶</span>
+                    <h3>Nuestra Playlist</h3>
+                    <p>Las canciones de nuestra historia</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
+            </a>
+
+            <a href="regalos/flores.html" class="tarjeta-regalo cerrado" data-id="flores">
+                <div class="envoltorio">
+                    <small>Toca para abrir</small>
+                </div>
+                <div class="contenido">
+                    <span class="icono">🌸</span>
+                    <h3>Ramo de Flores</h3>
+                    <p>Un detalle floral especial</p>
+                    <span class="mini-btn">Ver regalo →</span>
+                </div>
+            </a>
+
+        </div>
+
+        <a href="index.html" class="btn-volver">← Volver al inicio</a>
+        <button type="button" class="reenvolver" id="reenvolver">Volver a envolver los regalos</button>
+    </div>
+
+    <!-- Corazones que salen de las cajas al abrirse -->
+    <div class="capa-corazones-menu" id="capaCorazonesMenu" aria-hidden="true"></div>
+
+    <script>
+        const CLAVE = 'regalosAbiertos';
+        const tarjetas = document.querySelectorAll('.tarjeta-regalo');
+        const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const SVG_CORAZON = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+        const COLORES_CORAZON = ['#ffffff', '#6cb4ee', '#ffffff', '#2f6db5'];
+
+        function leerAbiertos() {
+            try {
+                return JSON.parse(localStorage.getItem(CLAVE)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function guardarAbierto(id) {
+            try {
+                const abiertos = leerAbiertos();
+                if (!abiertos.includes(id)) {
+                    abiertos.push(id);
+                    localStorage.setItem(CLAVE, JSON.stringify(abiertos));
+                }
+            } catch (e) { /* si falla el guardado, no pasa nada */ }
+        }
+
+        // Cada tarjeta lleva su regalo 🎁 con su número
+        tarjetas.forEach((t, i) => {
+            const caja = document.createElement('div');
+            caja.className = 'caja-regalo';
+            caja.setAttribute('aria-hidden', 'true');
+            caja.innerHTML = `
+                <div class="caja-mueve">
+                    <div class="caja-destello"></div>
+                    <span class="caja-emoji">🎁</span>
+                    <span class="caja-numero">${i + 1}</span>
+                </div>`;
+            t.querySelector('.envoltorio').prepend(caja);
+        });
+
+        // Al cargar: dejar abiertos los que ya se descubrieron (sin animación)
+        function pintarEstado() {
+            const yaAbiertos = leerAbiertos();
+            tarjetas.forEach(t => {
+                delete t.dataset.animando;
+                t.classList.remove('abriendo', 'destapando', 'desvaneciendo', 'recien-abierto');
+                const abierto = yaAbiertos.includes(t.dataset.id);
+                t.classList.toggle('abierto', abierto);
+                t.classList.toggle('cerrado', !abierto);
+            });
+        }
+        pintarEstado();
+
+        // Al volver con el botón "atrás" el navegador puede restaurar la página
+        // a mitad de animación: se repinta con lo guardado
+        window.addEventListener('pageshow', e => { if (e.persisted) pintarEstado(); });
+
+        // Corazones blancos y azules que suben desde la caja
+        function corazones(t) {
+            const capa = document.getElementById('capaCorazonesMenu');
+            const r = t.querySelector('.caja-emoji').getBoundingClientRect();
+            for (let i = 0; i < 12; i++) {
+                const c = document.createElement('span');
+                c.className = 'corazon-caja';
+                c.innerHTML = SVG_CORAZON;
+                c.style.color = COLORES_CORAZON[i % COLORES_CORAZON.length];
+                const tam = 10 + Math.random() * 12;
+                c.style.width = c.style.height = tam + 'px';
+                c.style.left = (r.left + r.width / 2) + 'px';
+                c.style.top = r.top + 'px';
+                capa.appendChild(c);
+
+                const dx = (Math.random() - 0.5) * 160;
+                const dy = -(70 + Math.random() * 120);
+                c.animate([
+                    { transform: 'translate(-50%, -50%) scale(0.3)', opacity: 0 },
+                    { transform: 'translate(-50%, -50%) scale(0.9)', opacity: 1, offset: 0.1 },
+                    { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1)`, opacity: 1, offset: 0.65 },
+                    { transform: `translate(calc(-50% + ${dx * 1.2}px), calc(-50% + ${dy - 40}px)) scale(0.8)`, opacity: 0 }
+                ], { duration: 1100 + Math.random() * 500, delay: Math.random() * 120, easing: 'ease-out', fill: 'both' })
+                    .onfinish = () => c.remove();
+            }
+        }
+
+        function abrir(t) {
+            t.dataset.animando = '1';
+            // Al terminar: se guarda como abierto y entra directamente en el regalo
+            // (la tarjeta con su contenido ya se verá al volver al menú)
+            const fin = () => {
+                guardarAbierto(t.dataset.id);
+                location.href = t.href;
+            };
+
+            if (reducirMovimiento) {
+                // Solo un fundido
+                t.classList.add('desvaneciendo');
+                setTimeout(fin, 350);
+                return;
+            }
+
+            t.classList.add('abriendo');                       // tiembla
+            setTimeout(() => {                                  // salta, destello y corazones
+                t.classList.add('destapando');
+                corazones(t);
+            }, 500);
+            setTimeout(() => t.classList.add('desvaneciendo'), 1000);  // la caja se desvanece
+            setTimeout(fin, 1300);                              // entra en el regalo
+        }
+
+        // Al tocar un regalo cerrado: se abre en lugar de navegar
+        tarjetas.forEach(t => {
+            t.addEventListener('click', e => {
+                if (t.dataset.animando) { e.preventDefault(); return; }
+                if (!t.classList.contains('cerrado')) return; // ya abierto: navega normal
+                e.preventDefault();
+                abrir(t);
+            });
+        });
+
+        // "Volver a envolver los regalos": borra lo guardado y cierra todas las cajas
+        document.getElementById('reenvolver').addEventListener('click', () => {
+            try { localStorage.removeItem(CLAVE); } catch (e) { /* sin acceso, no pasa nada */ }
+            tarjetas.forEach(t => {
+                if (t.dataset.animando) return;
+                t.classList.remove('abierto', 'recien-abierto');
+                t.classList.add('cerrado');
+            });
+        });
+    </script>
+
+</body>
+</html>

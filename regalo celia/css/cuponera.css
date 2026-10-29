@@ -1,0 +1,725 @@
+/* ==========================================================
+   CUPONERA (regalos/cuponera.html)
+   Todo va dentro de .pagina-cuponera para no afectar a otras páginas
+   ========================================================== */
+.pagina-cuponera {
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Mientras se ve la carta, la página no hace scroll */
+.pagina-cuponera.intro {
+    overflow: hidden;
+}
+
+.pagina-cuponera .container {
+    max-width: 860px;
+}
+
+/* ==========================================================
+   PANTALLA DE INTRO (CARTA)
+   ========================================================== */
+.pantalla-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 20px 16px;
+    text-align: center;
+}
+
+.pantalla-intro[hidden] {
+    display: none;
+}
+
+.pantalla-intro.saliendo {
+    animation: pantallaSale 0.5s ease forwards;
+}
+
+@keyframes pantallaSale {
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* --- La carta --- */
+.carta-vales {
+    width: 100%;
+    max-width: 420px;
+    max-height: 100%;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 32px 24px 28px;
+    box-shadow: 0 20px 50px rgba(47, 109, 181, 0.22);
+    animation: cartaEntra 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.carta-vales h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    color: var(--azul-marino);
+    margin-bottom: 16px;
+}
+
+.carta-vales p {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: var(--texto-secundario);
+    margin-bottom: 12px;
+}
+
+.carta-vales .carta-firma {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--azul);
+    margin: 18px 0 24px;
+}
+
+.btn-ver-vales,
+.btn-si {
+    background: linear-gradient(135deg, #6cb4ee, #2f6db5);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 32px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px var(--accent-glow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-ver-vales:hover,
+.btn-si:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(47, 109, 181, 0.55);
+}
+
+@keyframes cartaEntra {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+    }
+}
+
+/* ==========================================================
+   CUPONERA (oculta hasta terminar la intro)
+   ========================================================== */
+.cuponera {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+}
+
+.cuponera.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pagina-cuponera p.subtitulo {
+    margin-bottom: 14px;
+}
+
+.contador-vales {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 30px;
+    padding: 8px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+    color: var(--texto-secundario);
+    box-shadow: 0 4px 14px rgba(47, 109, 181, 0.1);
+}
+
+.contador-vales strong {
+    color: var(--azul);
+    font-size: 1.1rem;
+}
+
+.vales-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    width: 100%;
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+/* ==========================================================
+   CADA VALE (con forma de ticket)
+   .vale        → sombra, hover y animación de entrada
+   .vale-ticket → el papel, con las muescas recortadas
+   ========================================================== */
+.vale {
+    filter: drop-shadow(0 6px 14px rgba(47, 109, 181, 0.16));
+    transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.4, 1), filter 0.35s ease;
+}
+
+/* Entran uno a uno cuando aparece la cuponera */
+.cuponera.visible .vale {
+    animation: valeEntra 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+    animation-delay: calc(0.35s + var(--i) * 0.1s);
+}
+
+@keyframes valeEntra {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+}
+
+@media (hover: hover) {
+    .vale:not(.canjeado):hover {
+        transform: translateY(-6px) rotate(-1.2deg);
+        filter: drop-shadow(0 14px 22px rgba(47, 109, 181, 0.28));
+    }
+
+    .vale:not(.canjeado):nth-child(even):hover {
+        transform: translateY(-6px) rotate(1.2deg);
+    }
+}
+
+.vale-ticket {
+    position: relative;
+    display: flex;
+    height: 100%;
+    min-height: 130px;
+    background: #fff;
+    border-radius: 14px;
+    transition: background 0.4s ease;
+    /* Muescas semicirculares en los laterales */
+    -webkit-mask:
+        radial-gradient(circle 12px at left center, transparent 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle 12px at right center, transparent 98%, #000) right / 51% 100% no-repeat;
+    mask:
+        radial-gradient(circle 12px at left center, transparent 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle 12px at right center, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+
+.vale-cuerpo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 14px 18px 24px;
+    min-width: 0;
+}
+
+.vale-emoji {
+    flex-shrink: 0;
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    line-height: 1;
+    background: #e8f2fc;
+    border-radius: 50%;
+}
+
+.vale-texto {
+    min-width: 0;
+}
+
+.vale-texto h3 {
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: var(--azul-marino);
+    margin-bottom: 3px;
+}
+
+.vale-texto p {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: var(--texto-secundario);
+    margin-bottom: 12px;
+}
+
+.vale .btn-canjear {
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px 18px;
+}
+
+/* Talón con línea de corte discontinua */
+.vale-talon {
+    position: relative;
+    flex-shrink: 0;
+    width: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 2px dashed rgba(47, 109, 181, 0.3);
+    background: #f4f9fe;
+    border-radius: 0 14px 14px 0;
+}
+
+.vale-talon span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--azul);
+    padding-right: 6px;
+}
+
+/* --- Sello de "CANJEADO" --- */
+.vale-sello {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: calc(50% - 27px);
+    transform: translate(-50%, -50%) rotate(-12deg);
+    padding: 6px 14px 5px;
+    border: 3px solid #2f6db5;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px rgba(47, 109, 181, 0.6);
+    background: rgba(255, 255, 255, 0.55);
+    color: #2f6db5;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.vale-sello small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.vale-sello small:empty {
+    display: none;
+}
+
+/* --- Vale ya canjeado: gris perla --- */
+.vale.canjeado {
+    filter: drop-shadow(0 3px 8px rgba(31, 53, 80, 0.08));
+}
+
+.vale.canjeado .vale-ticket {
+    background: #eceff3;
+}
+
+.vale.canjeado .vale-emoji,
+.vale.canjeado .vale-texto > :not(.vale-deseo),
+.vale.canjeado .vale-talon span {
+    opacity: 0.45;
+    filter: grayscale(1);
+}
+
+.vale.canjeado .vale-talon {
+    background: #e3e7ec;
+}
+
+.vale.canjeado .btn-canjear {
+    background: transparent;
+    color: var(--texto-secundario);
+    border: 1px solid rgba(90, 116, 145, 0.35);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.vale.canjeado .vale-sello {
+    display: block;
+}
+
+.vale.recien-canjeado .vale-sello {
+    animation: selloEntra 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+@keyframes selloEntra {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(-12deg) scale(2.2);
+    }
+}
+
+/* ==========================================================
+   VALE ESPECIAL "POR LO QUE TÚ QUIERAS" (dorado, con cuadro para escribir)
+   ========================================================== */
+@property --giro {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.vale.especial .vale-ticket {
+    border: 2px solid transparent;
+    background:
+        linear-gradient(160deg, #fffdf5, #fff6dc) padding-box,
+        conic-gradient(from var(--giro), #d4a017, #fff4cc, #b8860b, #f5d76e, #d4a017) border-box;
+    animation: giraBorde 4s linear infinite;
+}
+
+/* Halo dorado que late detrás del ticket */
+.vale.especial {
+    position: relative;
+    filter: drop-shadow(0 6px 14px rgba(184, 134, 11, 0.2));
+}
+
+.vale.especial::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    z-index: -1;
+    border-radius: 16px;
+    background: #f5c842;
+    filter: blur(14px);
+    animation: brilloComodin 2.4s ease-in-out infinite;
+}
+
+@media (hover: hover) {
+    .vale.especial:not(.canjeado):hover {
+        filter: drop-shadow(0 14px 22px rgba(184, 134, 11, 0.32));
+    }
+}
+
+.vale.especial.canjeado::before {
+    display: none;
+}
+
+.vale.especial .vale-cuerpo {
+    align-items: flex-start;
+}
+
+.vale.especial .vale-texto {
+    flex: 1;
+}
+
+.vale.especial .vale-emoji {
+    background: linear-gradient(135deg, #fff4cc, #f5d76e);
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(212, 160, 23, 0.5);
+}
+
+.vale.especial .vale-texto h3 {
+    color: #8a6508;
+}
+
+.vale.especial .vale-texto p {
+    color: #8f7a4a;
+}
+
+.vale.especial .vale-talon {
+    border-left-color: rgba(184, 134, 11, 0.4);
+    background: linear-gradient(180deg, #fff4cc, #f5e2a0);
+}
+
+.vale.especial .vale-talon span {
+    color: #b8860b;
+}
+
+.vale.especial .btn-canjear {
+    background: linear-gradient(135deg, #f5d76e, #c9971a);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(120, 80, 0, 0.35);
+    box-shadow: 0 3px 12px rgba(184, 134, 11, 0.4);
+}
+
+.vale.especial .btn-canjear:hover {
+    box-shadow: 0 5px 16px rgba(184, 134, 11, 0.55);
+}
+
+/* Cuadro para escribir el deseo */
+.vale-campo {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border: 1.5px solid rgba(212, 160, 23, 0.45);
+    border-radius: 12px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 16px; /* 16px evita que el móvil haga zoom al escribir */
+    line-height: 1.4;
+    color: var(--azul-marino);
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vale-campo::placeholder {
+    color: #b9a77a;
+}
+
+.vale-campo:focus {
+    outline: none;
+    border-color: #d4a017;
+    box-shadow: 0 0 0 3px rgba(245, 215, 110, 0.45);
+}
+
+/* Si intenta enviarlo vacío, el cuadro se sacude */
+.vale-campo.vacio {
+    animation: campoVacio 0.4s ease;
+    border-color: #d4a017;
+}
+
+@keyframes campoVacio {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-3px); }
+}
+
+/* El deseo ya enviado, escrito en el vale */
+.vale-deseo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem !important;
+    line-height: 1.45;
+    color: #8a6508 !important;
+    margin: 4px 0 12px !important;
+    word-break: break-word;
+}
+
+.vale-deseo:empty {
+    display: none;
+}
+
+/* Canjeado: sigue siendo dorado pero apagado, y el sello en dorado */
+.vale.especial.canjeado .vale-ticket {
+    animation: none;
+    background:
+        linear-gradient(#f4f0e6, #f4f0e6) padding-box,
+        linear-gradient(#e2d6b5, #e2d6b5) border-box;
+}
+
+.vale.especial.canjeado .vale-talon {
+    background: #ece4cf;
+}
+
+.vale.especial .vale-sello {
+    top: 32px;
+    transform: translate(-50%, 0) rotate(-8deg);
+    border-color: #b8860b;
+    color: #b8860b;
+    box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px rgba(184, 134, 11, 0.55);
+}
+
+.vale.especial.recien-canjeado .vale-sello {
+    animation-name: selloEntraArriba;
+}
+
+@keyframes selloEntraArriba {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 0) rotate(-8deg) scale(2.2);
+    }
+}
+
+@keyframes giraBorde {
+    to { --giro: 360deg; }
+}
+
+@keyframes brilloComodin {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.75; }
+}
+
+/* ==========================================================
+   MODAL DE CONFIRMACIÓN
+   ========================================================== */
+.modal-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(31, 53, 80, 0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    animation: fundido 0.25s ease;
+}
+
+.modal-fondo[hidden] {
+    display: none;
+}
+
+.modal-caja {
+    width: 100%;
+    max-width: 360px;
+    background: #fff;
+    border-radius: 22px;
+    padding: 28px 22px 22px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(31, 53, 80, 0.3);
+    animation: modalEntra 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+
+.modal-emoji {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 12px;
+    display: grid;
+    place-items: center;
+    font-size: 2.3rem;
+    background: #e8f2fc;
+    border-radius: 50%;
+}
+
+.modal-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--azul-marino);
+    margin-bottom: 8px;
+}
+
+.modal-pregunta {
+    font-size: 1rem;
+    color: var(--texto-secundario);
+    margin-bottom: 22px;
+}
+
+/* El deseo escrito, en el modal del vale especial */
+.modal-deseo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    color: #8a6508;
+    background: #fff8e1;
+    border: 1px solid rgba(212, 160, 23, 0.35);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    max-height: 30vh;
+    overflow-y: auto;
+    word-break: break-word;
+}
+
+.modal-deseo[hidden] {
+    display: none;
+}
+
+.modal-fondo.especial .modal-emoji {
+    background: linear-gradient(135deg, #fff4cc, #f5d76e);
+}
+
+.modal-fondo.especial .btn-si {
+    background: linear-gradient(135deg, #f5d76e, #c9971a);
+    text-shadow: 0 1px 2px rgba(120, 80, 0, 0.35);
+    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+}
+
+.modal-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-luego {
+    background: transparent;
+    border: 1px solid rgba(59, 130, 196, 0.3);
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn-luego:hover {
+    background: rgba(59, 130, 196, 0.08);
+    color: var(--azul);
+}
+
+@keyframes fundido {
+    from { opacity: 0; }
+}
+
+@keyframes modalEntra {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.92);
+    }
+}
+
+/* ==========================================================
+   ESCRITORIO: DOS COLUMNAS
+   ========================================================== */
+@media (min-width: 700px) {
+    .vales-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+
+    /* El comodín, centrado y solo en la última fila */
+    .vale.especial {
+        grid-column: 1 / -1;
+        width: 100%;
+        max-width: 520px;
+        justify-self: center;
+    }
+
+    .modal-botones {
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+}
+
+/* Móviles: un poco más de sitio para el texto */
+@media (max-width: 480px) {
+    .vale-cuerpo {
+        padding-left: 22px;
+        padding-right: 10px;
+    }
+
+    .vale-emoji {
+        width: 54px;
+        height: 54px;
+        font-size: 1.75rem;
+    }
+
+    .vale-talon {
+        width: 46px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 360px) {
+    .vale-cuerpo {
+        gap: 10px;
+        padding-left: 20px;
+    }
+
+    .vale-emoji {
+        width: 52px;
+        height: 52px;
+        font-size: 1.7rem;
+    }
+
+    .vale-sello {
+        font-size: 1rem;
+    }
+}
+
+/* Movimiento reducido: las animaciones duran casi nada (pero siguen avisando al terminar) */
+@media (prefers-reduced-motion: reduce) {
+    .pagina-cuponera *,
+    .pagina-cuponera *::before,
+    .pagina-cuponera *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuponera de Vales 🤍</title>
+    <!-- Enlace al CSS global (subiendo un nivel con ../) -->
+    <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="stylesheet" href="../css/cuponera.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Confeti para cuando se canjea un vale -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body class="pagina-cuponera intro">
+
+    <!-- 1. LA CARTA (edita aquí el mensaje) -->
+    <section id="pantallaCarta" class="pantalla-intro">
+        <div class="carta-vales">
+            <h2>Para ti, mi amor 🤍</h2>
+            <p>
+                Te he preparado unos vales para que los uses cuando quieras.
+                Cada uno es una promesa: un plan, un capricho o simplemente un rato juntos.
+            </p>
+            <p>
+                Úsalos sin miedo, que para eso son tuyos. Te quiero muchísimo.
+            </p>
+            <p class="carta-firma">— Con todo mi amor 🤍</p>
+            <button id="btnVerVales" class="btn-ver-vales" type="button">Ver mis vales 🤍</button>
+        </div>
+    </section>
+
+    <!-- 2. LA CUPONERA -->
+    <div id="cuponera" class="container cuponera">
+        <h1>Cuponera de Vales</h1>
+        <p class="subtitulo">Canjea estos vales cuando quieras (¡solo se pueden usar una vez!)</p>
+        <p id="contadorVales" class="contador-vales"></p>
+
+        <div id="valesGrid" class="vales-grid">
+            <!-- Los vales se crean desde js/cuponera.js -->
+        </div>
+
+        <a href="../menu.html" class="btn-volver">← Volver al menú</a>
+    </div>
+
+    <!-- Modal de confirmación del canje -->
+    <div id="modalCanje" class="modal-fondo" hidden>
+        <div class="modal-caja" role="dialog" aria-modal="true" aria-labelledby="modalPregunta">
+            <div id="modalEmoji" class="modal-emoji"></div>
+            <p id="modalTitulo" class="modal-titulo"></p>
+            <p id="modalDeseo" class="modal-deseo" hidden></p>
+            <p id="modalPregunta" class="modal-pregunta">¿Seguro que quieres usar este vale ahora? 🥺</p>
+            <div class="modal-botones">
+                <button id="btnConfirmar" class="btn-si" type="button">¡Sí, lo quiero!</button>
+                <button id="btnCancelar" class="btn-luego" type="button">Mejor luego</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script específico para la cuponera -->
+    <script src="../js/cuponera.js"></script>
+</body>
+</html>
