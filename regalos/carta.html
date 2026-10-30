@@ -12,8 +12,11 @@
     <!-- Contenedor general que ahora solo muestra la carta y el botón final -->
     <div class="container" style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
         
+        <!-- Mensajito previo que aparece antes de la carta -->
+        <p id="introCarta" class="intro-carta oculto">Esta cartita es para la persona más importante, te quiero 🤍🤍🤍</p>
+
         <!-- Bloque de papel real (sin título arriba) -->
-        <div class="papel-carta">
+        <div id="papelCarta" class="papel-carta oculto" style="display: none;">
             <p id="textoCarta"></p>
         </div>
 

@@ -22,6 +22,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Retardo inicial antes de empezar
-    setTimeout(escribirLetra, 800);
+    const intro = document.getElementById("introCarta");
+    const papel = document.getElementById("papelCarta");
+
+    // 1. Aparece el mensajito previo
+    setTimeout(() => {
+        intro.classList.remove("oculto");
+        intro.classList.add("visible");
+    }, 300);
+
+    // 2. Se desvanece el mensajito
+    setTimeout(() => {
+        intro.classList.remove("visible");
+        intro.classList.add("oculto");
+    }, 3800);
+
+    // 3. Aparece la carta y empieza a escribirse
+    setTimeout(() => {
+        intro.style.display = "none";
+        papel.style.display = "";
+        void papel.offsetWidth; // fuerza el repintado para que se vea la transición
+        papel.classList.remove("oculto");
+        papel.classList.add("visible");
+        setTimeout(escribirLetra, 800);
+    }, 4900);
 });

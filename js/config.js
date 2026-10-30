@@ -6,7 +6,7 @@ const CONFIG = {
     // Momento en que termina la cuenta atrás y se desbloquean las sorpresas.
     // Formato: AAAA-MM-DDTHH:MM:SS+zona  (España en invierno = +01:00)
     // ⚠️ TEMPORAL para pruebas. La fecha original es: '2026-12-11T00:00:00+01:00'
-    fechaObjetivo: '2026-12-11T00:00:00+02:00',
+    fechaObjetivo: '2026-09-11T00:00:00+02:00',
 
     // Desde cuándo empieza a "cargarse" la barra de progreso.
     fechaInicio: '2026-01-01T00:00:00+01:00',
