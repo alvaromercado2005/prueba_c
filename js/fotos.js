@@ -15,73 +15,73 @@ const recuerdos = [
     {
         imagen: "2.jpeg",
         pie: "Una cena inolvidable 🍷",
-        fecha: "12 de octubre de 2025",
+        fecha: "8/05/2026",
         texto: "No me acuerdo de lo que cenamos, solo de lo que me reí contigo."
     },
     {
         imagen: "3.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "9/05/2026",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
         imagen: "4.jpeg",
         pie: "Tarde de risas y pelis 🍿",
-        fecha: "11 de noviembre de 2025",
+        fecha: "17/04/2025",
         texto: "Mi plan favorito: cualquiera, si es contigo."
     },
     {
         imagen: "5.jpeg",
         pie: "Nuestro primer viaje juntos ✈️",
-        fecha: "3 de octubre de 2025",
+        fecha: "8/06/2025",
         texto: "Aquel día supe que quería muchos viajes más contigo."
     },
     {
         imagen: "6.jpeg",
         pie: "Una cena inolvidable 🍷",
-        fecha: "12 de octubre de 2025",
+        fecha: "26/06/2026",
         texto: "No me acuerdo de lo que cenamos, solo de lo que me reí contigo."
     },
     {
         imagen: "7.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "29/06/2026",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
         imagen: "8.jpeg",
         pie: "Tarde de risas y pelis 🍿",
-        fecha: "11 de noviembre de 2025",
+        fecha: "29/06/2026",
         texto: "Mi plan favorito: cualquiera, si es contigo."
     },
     {
         imagen: "9.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "31/07/2026",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
         imagen: "10.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "7/08/2026",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
         imagen: "11.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "12/08/2026",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
         imagen: "12.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "17/08/2026",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
         imagen: "13.jpeg",
         pie: "Paseo al atardecer ✨",
-        fecha: "10 de noviembre de 2025",
+        fecha: "17/08/2026  ",
         texto: "El cielo estaba precioso, pero yo solo te miraba a ti."
     },
     {
