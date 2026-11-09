@@ -81,7 +81,7 @@ const numeros = {
     segundos: document.getElementById('segundos')
 };
 
-// "Se desbloquea el 11 de diciembre ✨" sacado de CONFIG
+// "Se desbloquea el 12 de diciembre ✨" sacado de CONFIG
 elemNota.textContent = 'Se desbloquea el ' + new Date(CONFIG.fechaObjetivo).toLocaleDateString('es-ES', {
     day: 'numeric', month: 'long', timeZone: 'Europe/Madrid'
 }) + ' ✨';

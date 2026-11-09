@@ -1,0 +1,373 @@
+/* ==========================================================
+   NUESTROS RECUERDOS (regalos/fotos.html)
+   Rasca, amplía y gira. Todo va dentro de .pagina-fotos
+   (el diseño base de la polaroid sigue en estilos.css)
+   ========================================================== */
+
+/* 3 columnas en escritorio, 2 en tablet, 1 en móvil */
+.pagina-fotos .galeria-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 859px) {
+    .pagina-fotos .galeria-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 519px) {
+    .pagina-fotos .galeria-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .pagina-fotos .galeria-grid .polaroid {
+        width: 100%;
+        max-width: 340px;
+        justify-self: center;
+    }
+}
+
+/* La inclinación sale de --giro-base; en móvil es la mitad para que no se salga */
+.pagina-fotos .polaroid {
+    --giro: var(--giro-base, 0deg);
+    cursor: default;
+}
+
+@media (max-width: 519px) {
+    .pagina-fotos .polaroid {
+        --giro: calc(var(--giro-base, 0deg) * 0.5);
+    }
+}
+
+.pagina-fotos .polaroid.descubierta {
+    cursor: pointer;
+}
+
+.pagina-fotos .polaroid:focus-visible {
+    outline: 3px solid var(--azul-cielo);
+    outline-offset: 6px;
+}
+
+/* En pantallas táctiles el :hover se queda "pegado"; ahí no se agranda */
+@media (hover: none) {
+    .pagina-fotos .polaroid:hover {
+        transform: rotate(var(--giro));
+        box-shadow: 0 10px 25px rgba(30, 70, 120, 0.2);
+    }
+}
+
+/* Pie de foto: la fecha mientras está tapada, el pie al descubrirla.
+   Los dos van en la misma celda para que la polaroid no cambie de alto */
+.pagina-fotos .polaroid figcaption {
+    display: grid;
+    align-items: center;
+}
+
+.pie-fecha,
+.pie-texto {
+    grid-area: 1 / 1;
+}
+
+.pie-fecha {
+    font-size: 0.85em;
+    color: var(--azul);
+}
+
+.pie-texto,
+.polaroid.descubierta .pie-fecha {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.polaroid.descubierta .pie-texto {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Solo al descubrirla rascando: sale la fecha y entra el pie desde abajo */
+.polaroid.animar-pie .pie-fecha {
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.polaroid.animar-pie .pie-texto {
+    animation: pieEntra 0.7s ease 0.3s both;
+}
+
+@keyframes pieEntra {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .polaroid.animar-pie .pie-texto {
+        animation: none;
+    }
+}
+
+/* Mientras está ampliada, la pequeña no se ve (parece que "sale" de ahí) */
+.pagina-fotos .polaroid.en-visor {
+    visibility: hidden;
+}
+
+/* ==========================================================
+   CAPA PARA RASCAR (solo encima de la foto)
+   ========================================================== */
+.pagina-fotos .foto-marco {
+    position: relative;
+}
+
+.rasca {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none; /* al rascar no se mueve la página */
+    cursor: crosshair;
+    transition: opacity 0.8s ease;
+}
+
+.rasca.desvanece {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Corazoncitos que suben al descubrir una foto */
+.corazon-sube {
+    position: fixed;
+    z-index: 900;
+    pointer-events: none;
+    line-height: 1;
+    text-shadow: 0 0 6px rgba(47, 109, 181, 0.55);
+}
+
+/* Enlace discreto para volver a tapar las fotos */
+.volver-a-tapar {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 0.75rem;
+    color: var(--texto-secundario);
+    opacity: 0.7;
+}
+
+.volver-a-tapar:hover {
+    opacity: 1;
+}
+
+/* ==========================================================
+   VISOR: POLAROID AMPLIADA QUE SE DA LA VUELTA
+   ========================================================== */
+.sin-scroll,
+.sin-scroll body {
+    overflow: hidden;
+}
+
+.visor {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    padding: 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: rgba(20, 45, 75, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.visor[hidden] {
+    display: none;
+}
+
+.visor.abierto {
+    opacity: 1;
+}
+
+.visor-contenido {
+    margin: auto; /* centrado, y si no cabe se puede hacer scroll */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.visor-tarjeta {
+    width: min(100%, max(56vh, 300px), 520px);
+    perspective: 1400px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.visor-tarjeta:focus {
+    outline: none;
+}
+
+.visor-tarjeta:focus-visible .cara {
+    outline: 3px solid var(--azul-cielo);
+    outline-offset: 4px;
+}
+
+/* Las dos caras van en la misma celda: así miden siempre lo mismo */
+.visor-interior {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.visor-interior.girada {
+    transform: rotateY(180deg);
+}
+
+.cara {
+    grid-area: 1 / 1;
+    margin: 0;
+    padding: 16px 16px 22px;
+    background: #fdfdfb;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.visor-foto {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1f3550;
+}
+
+.visor-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cara-frente figcaption {
+    font-family: 'Caveat', 'Playfair Display', cursive;
+    font-size: 1.6rem;
+    color: #23364d;
+    text-align: center;
+    margin-top: 14px;
+    min-height: 1.6em;
+    line-height: 1.2;
+}
+
+/* Parte de atrás */
+.cara-atras {
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    background: #f5f9fe;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 0 0 10px #fdfdfb, inset 0 0 0 11px rgba(59, 130, 196, 0.15);
+}
+
+.atras-fecha {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--azul);
+}
+
+.atras-texto {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.15rem, 4.8vw, 1.55rem);
+    line-height: 1.5;
+    color: var(--azul-marino);
+    overflow-wrap: anywhere;
+}
+
+.atras-corazon {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 4px rgba(47, 109, 181, 0.45));
+}
+
+/* Pista y botón debajo de la polaroid */
+.visor-pista {
+    color: #fff;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.4s ease;
+}
+
+.visor-pista.oculta {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.btn-cerrar-visor {
+    min-height: 48px;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #6cb4ee, #2f6db5);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-cerrar-visor:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(47, 109, 181, 0.6);
+    filter: brightness(1.1);
+}
+
+.btn-cerrar-visor:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+
+/* ==========================================================
+   MOVIMIENTO REDUCIDO: el giro es un fundido simple
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .visor-interior,
+    .visor-interior.girada {
+        transform: none;
+        transition: none;
+    }
+
+    .cara {
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .cara-atras {
+        transform: none;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .girada .cara-frente {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .girada .cara-atras {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .rasca {
+        transition-duration: 0.3s;
+    }
+}
