@@ -297,20 +297,7 @@
     filter: drop-shadow(0 0 4px rgba(47, 109, 181, 0.45));
 }
 
-/* Pista y botón debajo de la polaroid */
-.visor-pista {
-    color: #fff;
-    font-size: 0.9rem;
-    opacity: 0.9;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-    transition: opacity 0.4s ease;
-}
-
-.visor-pista.oculta {
-    opacity: 0;
-    visibility: hidden;
-}
-
+/* Botón debajo de la polaroid */
 .btn-cerrar-visor {
     min-height: 48px;
     padding: 12px 40px;
@@ -335,6 +322,215 @@
 .btn-cerrar-visor:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 3px;
+}
+
+/* ==========================================================
+   VISOR: PASAR DE UNA FOTO A OTRA
+   ========================================================== */
+/* Deja el scroll vertical al navegador y los deslizamientos laterales para nosotros;
+   overflow-x evita una barra horizontal mientras la foto sale por un lado */
+.visor {
+    overflow-x: hidden;
+    touch-action: pan-y pinch-zoom;
+}
+
+/* Flechas ‹ › a los lados (solo con ratón; en móvil se desliza el dedo) */
+.visor-flecha {
+    position: fixed;
+    top: 50%;
+    z-index: 1;
+    width: 52px;
+    height: 52px;
+    margin-top: -26px;
+    padding: 0 0 4px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: var(--azul);
+    font-family: inherit;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.visor-flecha-anterior {
+    left: 24px;
+}
+
+.visor-flecha-siguiente {
+    right: 24px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .visor-flecha {
+        display: flex;
+    }
+}
+
+.visor-flecha:hover:not(:disabled) {
+    background: #fff;
+    transform: scale(1.08);
+}
+
+.visor-flecha:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.visor-flecha:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+
+/* "4 / 15" debajo de la polaroid */
+.visor-posicion {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================
+   CONTADOR "HAS DESCUBIERTO X DE Y RECUERDOS"
+   ========================================================== */
+.pagina-fotos p.contador-recuerdos {
+    margin: -18px 0 26px;
+    min-height: 1.5em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--azul);
+}
+
+.contador-num {
+    display: inline-block;
+}
+
+.contador-num.pop {
+    animation: contadorPop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes contadorPop {
+    40% {
+        transform: scale(1.5);
+        color: var(--azul-cielo);
+    }
+}
+
+/* Al completarlo, la frase entera crece un poco (menos que un número) */
+.contador-recuerdos.pop {
+    animation: contadorPopSuave 0.6s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes contadorPopSuave {
+    40% {
+        transform: scale(1.12);
+    }
+}
+
+.contador-corazon {
+    display: inline-block;
+    animation: corazonLatido 1.8s ease-in-out infinite;
+}
+
+.contador-corazon:last-child {
+    animation-delay: 0.9s;
+}
+
+@keyframes corazonLatido {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.25);
+    }
+}
+
+/* ==========================================================
+   AVISO "DESLIZA PARA VER MÁS"
+   ========================================================== */
+.aviso-scroll {
+    position: fixed;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    z-index: 800; /* por debajo del visor y de los corazones */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(30, 70, 120, 0.15);
+    color: var(--azul);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    pointer-events: none; /* nunca bloquea un toque en las fotos */
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 12px);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
+}
+
+.aviso-scroll.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    transition-delay: 0.6s; /* aparece cuando ya han caído las primeras fotos */
+}
+
+/* Mientras hay una foto ampliada, no se ve */
+.sin-scroll .aviso-scroll {
+    opacity: 0;
+    visibility: hidden;
+    transition: none;
+}
+
+.aviso-scroll-flecha {
+    display: inline-block;
+    font-size: 1.1rem;
+    line-height: 1;
+    animation: flechaRebota 1.6s ease-in-out infinite;
+}
+
+@keyframes flechaRebota {
+    0%, 100% {
+        transform: translateY(-2px);
+    }
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contador-num.pop,
+    .contador-recuerdos.pop,
+    .contador-corazon,
+    .aviso-scroll-flecha {
+        animation: none;
+    }
+
+    .aviso-scroll,
+    .aviso-scroll.visible {
+        transform: translate(-50%, 0);
+        transition-property: opacity, visibility;
+    }
+
+    .visor-flecha {
+        transition: none;
+    }
 }
 
 /* ==========================================================

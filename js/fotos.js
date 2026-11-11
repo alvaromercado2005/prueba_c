@@ -106,8 +106,11 @@ const PAUSA_ENTRE_FOTOS = 700; // milisegundos entre una foto y la siguiente
 const RADIO_PINCEL = 20;        // px: tamaño del "dedo" que rasca
 const PORCENTAJE_DESCUBIERTO = 0.5; // al llegar aquí, la capa se va sola
 const MOVIMIENTO_MAXIMO_TOQUE = 8;  // px: si se mueve más, no cuenta como toque
+const UMBRAL_DESLIZAR = 50;         // px: deslizamiento mínimo para pasar de foto en el visor
+const DISTANCIA_AVISO_SCROLL = 80;  // px: al bajar esto, el aviso de "desliza" desaparece
 const CLAVE_DESCUBIERTAS = "fotosDescubiertas";
-const CLAVE_PISTA = "fotosPistaVista";
+const ESPERA_ANTES_DE_AMPLIAR = 800;  // ms: tras desvelar una foto, se amplía sola
+const ESPERA_ANTES_DE_GIRAR = 3000;   // ms: la foto se ve de frente y luego se gira sola
 // =======================================================
 
 const giros = [-3, 2, -1.5, 3, -2, 1.5]; // inclinación de cada polaroid
@@ -133,26 +136,10 @@ function guardarDescubierta(imagen) {
     }
 }
 
-function pistaYaVista() {
-    try {
-        return localStorage.getItem(CLAVE_PISTA) === "1";
-    } catch (e) {
-        return false;
-    }
-}
-
-function marcarPistaVista() {
-    try {
-        localStorage.setItem(CLAVE_PISTA, "1");
-    } catch (e) {
-        // sin acceso, no pasa nada
-    }
-}
-
 function volverATapar() {
     try {
         localStorage.removeItem(CLAVE_DESCUBIERTAS);
-        localStorage.removeItem(CLAVE_PISTA);
+        localStorage.removeItem("fotosPistaVista"); // de una versión anterior
     } catch (e) {
         // sin acceso, no pasa nada
     }
@@ -362,9 +349,13 @@ function lanzarCorazones(elemento) {
 // ======================================================
 
 // ================== VISOR (POLAROID AMPLIADA QUE SE GIRA) ==================
-let visor, visorTarjeta, visorInterior, visorImg, visorPie, visorFecha, visorTexto, visorPista;
+let visor, visorTarjeta, visorInterior, visorImg, visorPie, visorFecha, visorTexto;
+let temporizadorGiro = null; // giro automático pendiente (solo al desvelar una foto)
+let visorPosicion, flechaAnterior, flechaSiguiente;
 let polaroidAbierta = null;
+let indiceAbierto = -1;
 let animando = false;
+const polaroids = []; // { figura, recuerdo } en el mismo orden que en la página
 
 function crearVisor() {
     visor = document.createElement("div");
@@ -374,6 +365,8 @@ function crearVisor() {
     visor.setAttribute("aria-modal", "true");
     visor.setAttribute("aria-label", "Foto ampliada");
     visor.innerHTML = `
+        <button class="visor-flecha visor-flecha-anterior" type="button" aria-label="Foto anterior">‹</button>
+        <button class="visor-flecha visor-flecha-siguiente" type="button" aria-label="Foto siguiente">›</button>
         <div class="visor-contenido">
             <div class="visor-tarjeta" tabindex="0" role="button" aria-label="Darle la vuelta a la foto">
                 <div class="visor-interior">
@@ -388,7 +381,7 @@ function crearVisor() {
                     </div>
                 </div>
             </div>
-            <p class="visor-pista">Toca para darle la vuelta ↻</p>
+            <p class="visor-posicion" aria-live="polite"></p>
             <button class="btn-cerrar-visor" type="button">Cerrar</button>
         </div>
     `;
@@ -400,13 +393,56 @@ function crearVisor() {
     visorPie = visor.querySelector("figcaption");
     visorFecha = visor.querySelector(".atras-fecha");
     visorTexto = visor.querySelector(".atras-texto");
-    visorPista = visor.querySelector(".visor-pista");
+    visorPosicion = visor.querySelector(".visor-posicion");
+    flechaAnterior = visor.querySelector(".visor-flecha-anterior");
+    flechaSiguiente = visor.querySelector(".visor-flecha-siguiente");
+
+    // Deslizar el dedo (o arrastrar el ratón) a los lados para cambiar de foto.
+    // Si el dedo se ha movido, no cuenta como toque: así deslizar no gira la foto.
+    let gesto = null;
+    let ultimoDeslizamiento = 0;
+
+    visor.addEventListener("pointerdown", e => {
+        cancelarGiroAutomatico(); // si ella toca algo, se respeta lo que haga
+        if (!e.isPrimary) return;
+        gesto = { x: e.clientX, y: e.clientY, movido: false };
+    });
+
+    visor.addEventListener("pointermove", e => {
+        if (!gesto || !e.isPrimary || gesto.movido) return;
+        if (Math.hypot(e.clientX - gesto.x, e.clientY - gesto.y) > MOVIMIENTO_MAXIMO_TOQUE) {
+            gesto.movido = true;
+        }
+    });
+
+    visor.addEventListener("pointerup", e => {
+        if (!gesto || !e.isPrimary) return;
+        const dx = e.clientX - gesto.x;
+        const dy = e.clientY - gesto.y;
+        if (Math.hypot(dx, dy) > MOVIMIENTO_MAXIMO_TOQUE) gesto.movido = true;
+        // Tiene que ser claramente horizontal (no un scroll vertical)
+        if (Math.abs(dx) >= UMBRAL_DESLIZAR && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            ultimoDeslizamiento = performance.now();
+            navegar(dx < 0 ? 1 : -1);
+        }
+    });
+
+    visor.addEventListener("pointercancel", () => { gesto = null; });
 
     visor.addEventListener("click", e => {
-        if (animando) return;
-        if (visorTarjeta.contains(e.target)) {
+        // e.detail === 0: "clic" desde el teclado, nunca es un deslizamiento
+        const fueDeslizamiento = e.detail !== 0 &&
+            ((gesto && gesto.movido) || performance.now() - ultimoDeslizamiento < 400);
+        gesto = null;
+        if (fueDeslizamiento || animando) return;
+
+        if (flechaAnterior.contains(e.target)) {
+            navegar(-1);
+        } else if (flechaSiguiente.contains(e.target)) {
+            navegar(1);
+        } else if (visorTarjeta.contains(e.target)) {
             girar();
-        } else if (!visorPista.contains(e.target)) {
+        } else if (!visorPosicion.contains(e.target)) {
             // El botón "Cerrar" o cualquier sitio fuera de la polaroid
             cerrarVisor();
         }
@@ -420,17 +456,142 @@ function crearVisor() {
     });
 
     document.addEventListener("keydown", e => {
-        if (e.key === "Escape" && !visor.hidden) cerrarVisor();
+        if (visor.hidden) return;
+        cancelarGiroAutomatico();
+        if (e.key === "Escape") {
+            cerrarVisor();
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            navegar(-1);
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            navegar(1);
+        }
     });
+}
+
+// Siguiente (paso 1) o anterior (paso -1) foto ya descubierta; -1 si no hay
+function buscarDescubierta(desde, paso) {
+    for (let i = desde + paso; i >= 0 && i < polaroids.length; i += paso) {
+        if (polaroids[i].figura.classList.contains("descubierta")) return i;
+    }
+    return -1;
+}
+
+// Pone en el visor la foto número "indice"
+function rellenarVisor(indice) {
+    const { figura, recuerdo } = polaroids[indice];
+    indiceAbierto = indice;
+    polaroidAbierta = figura;
+
+    visorImg.src = CARPETA + recuerdo.imagen;
+    visorImg.alt = recuerdo.pie;
+    visorPie.textContent = recuerdo.pie;
+    visorFecha.textContent = recuerdo.fecha;
+    visorTexto.textContent = recuerdo.texto;
+    visorPosicion.textContent = `${indice + 1} / ${polaroids.length}`;
+
+    flechaAnterior.disabled = buscarDescubierta(indice, -1) === -1;
+    flechaSiguiente.disabled = buscarDescubierta(indice, 1) === -1;
+    // Si el foco estaba en una flecha que ya no se puede usar, pasa a la foto
+    if (document.activeElement && document.activeElement.disabled) {
+        visorTarjeta.focus({ preventScroll: true });
+    }
+}
+
+// Deja la polaroid del visor mirando hacia delante, sin animar el giro
+function ponerDeFrente() {
+    visorInterior.style.transition = "none";
+    visorInterior.classList.remove("girada");
+    void visorInterior.offsetWidth;
+    visorInterior.style.transition = "";
+    visorTarjeta.setAttribute("aria-label", "Darle la vuelta a la foto");
+}
+
+// Pasa a la foto anterior (-1) o siguiente (1) sin cerrar el visor
+function navegar(paso) {
+    if (animando || visor.hidden) return;
+    const destino = buscarDescubierta(indiceAbierto, paso);
+    if (destino === -1) {
+        empujonFinal(paso);
+        return;
+    }
+
+    const anterior = polaroidAbierta;
+    const ocultaEnPagina = anterior.classList.contains("en-visor");
+    animando = true;
+    // Al pasar de foto: sin giro automático y sin botón (se gira tocando la polaroid)
+    cancelarGiroAutomatico();
+
+    // La actual sale hacia un lado...
+    const salida = reducirMovimiento
+        ? [{ opacity: 1 }, { opacity: 0 }]
+        : [
+            { transform: "none", opacity: 1 },
+            { transform: `translateX(${-paso * 110}%) rotate(${-paso * 6}deg)`, opacity: 0 }
+        ];
+    const fuera = visorTarjeta.animate(salida, {
+        duration: reducirMovimiento ? 150 : 260,
+        easing: "cubic-bezier(0.4, 0, 1, 1)",
+        fill: "forwards"
+    });
+
+    fuera.onfinish = () => {
+        // ...se cambia la foto (siempre de frente)...
+        ponerDeFrente();
+        if (ocultaEnPagina) {
+            anterior.classList.remove("en-visor");
+            polaroids[destino].figura.classList.add("en-visor");
+        }
+        rellenarVisor(destino);
+
+        // ...y la nueva entra por el otro lado cuando la imagen está lista
+        const imagenLista = visorImg.decode ? visorImg.decode().catch(() => {}) : Promise.resolve();
+        const esperaMaxima = new Promise(r => setTimeout(r, 400));
+        Promise.race([imagenLista, esperaMaxima]).then(() => {
+            const entrada = reducirMovimiento
+                ? [{ opacity: 0 }, { opacity: 1 }]
+                : [
+                    { transform: `translateX(${paso * 110}%) rotate(${paso * 6}deg)`, opacity: 0 },
+                    { transform: "none", opacity: 1 }
+                ];
+            fuera.cancel();
+            visorTarjeta.animate(entrada, {
+                duration: reducirMovimiento ? 150 : 320,
+                easing: "cubic-bezier(0, 0, 0.2, 1)"
+            }).onfinish = () => { animando = false; };
+        });
+    };
+}
+
+// No hay más fotos descubiertas hacia ese lado: un pequeño "rebote"
+function empujonFinal(paso) {
+    if (reducirMovimiento) return;
+    animando = true;
+    visorTarjeta.animate(
+        [{ transform: "none" }, { transform: `translateX(${-paso * 14}px)` }, { transform: "none" }],
+        { duration: 280, easing: "ease-out" }
+    ).onfinish = () => { animando = false; };
 }
 
 function girar() {
     const girada = visorInterior.classList.toggle("girada");
     visorTarjeta.setAttribute("aria-label", girada ? "Volver a la foto" : "Darle la vuelta a la foto");
-    if (!visorPista.classList.contains("oculta")) {
-        visorPista.classList.add("oculta");
-        marcarPistaVista();
-    }
+}
+
+function cancelarGiroAutomatico() {
+    clearTimeout(temporizadorGiro);
+    temporizadorGiro = null;
+}
+
+// Primera vez que se desvela: foto de frente unos segundos y luego se gira sola
+function programarGiroAutomatico(retraso) {
+    cancelarGiroAutomatico();
+    temporizadorGiro = setTimeout(() => {
+        temporizadorGiro = null;
+        if (visor.hidden || visorInterior.classList.contains("girada")) return;
+        girar(); // con movimiento reducido, el CSS lo convierte en un fundido
+    }, retraso);
 }
 
 // Transformación que lleva la polaroid grande a la posición de la pequeña
@@ -444,16 +605,15 @@ function desdeLaPequena(figura) {
     return `translate(${dx}px, ${dy}px) scale(${escala}) rotate(${giro})`;
 }
 
-function abrirVisor(figura, recuerdo) {
+// recienDesvelada: se abre sola tras rascarla por primera vez
+function abrirVisor(indice, recienDesvelada = false) {
     if (animando || !visor.hidden) return;
-    polaroidAbierta = figura;
-
-    visorImg.src = CARPETA + recuerdo.imagen;
-    visorImg.alt = recuerdo.pie;
-    visorPie.textContent = recuerdo.pie;
-    visorFecha.textContent = recuerdo.fecha;
-    visorTexto.textContent = recuerdo.texto;
-    visorPista.classList.toggle("oculta", pistaYaVista());
+    const figura = polaroids[indice].figura;
+    rellenarVisor(indice);
+    if (recienDesvelada) {
+        // Cuenta los segundos desde que la foto ya está en su sitio
+        programarGiroAutomatico(ESPERA_ANTES_DE_GIRAR + (reducirMovimiento ? 0 : 450));
+    }
 
     // Bloquea el scroll de la página de fondo
     document.documentElement.classList.add("sin-scroll");
@@ -476,13 +636,16 @@ function abrirVisor(figura, recuerdo) {
 
 function cerrarVisor() {
     if (animando || visor.hidden) return;
+    cancelarGiroAutomatico();
     const figura = polaroidAbierta;
 
     // Vuelve con la foto hacia delante, sin animar el giro
-    visorInterior.style.transition = "none";
-    visorInterior.classList.remove("girada");
-    void visorInterior.offsetWidth;
-    visorInterior.style.transition = "";
+    ponerDeFrente();
+
+    // Tras pasar fotos, la polaroid puede estar fuera de la pantalla
+    const caja = figura.getBoundingClientRect();
+    const margen = caja.height * 0.2;
+    const seVe = caja.top >= -margen && caja.bottom <= window.innerHeight + margen;
 
     const terminar = () => {
         visor.hidden = true;
@@ -490,13 +653,20 @@ function cerrarVisor() {
         figura.classList.remove("en-visor");
         document.documentElement.classList.remove("sin-scroll");
         figura.focus({ preventScroll: true });
+        // Lleva la página hasta la polaroid que estaba viendo
+        if (!seVe) {
+            figura.scrollIntoView({ behavior: reducirMovimiento ? "auto" : "smooth", block: "center" });
+        }
         polaroidAbierta = null;
+        indiceAbierto = -1;
     };
 
     visor.classList.remove("abierto");
 
-    if (reducirMovimiento) {
-        setTimeout(terminar, 200);
+    // Sin animación de vuelta: fundido y, si hace falta, scroll hasta la foto
+    if (reducirMovimiento || !seVe) {
+        animando = true;
+        setTimeout(terminar, reducirMovimiento ? 200 : 300);
         return;
     }
 
@@ -553,6 +723,9 @@ function crearPolaroid(recuerdo, indice, descubierta) {
             prepararParaAmpliar();
             guardarDescubierta(recuerdo.imagen);
             lanzarCorazones(marco);
+            actualizarContador(true);
+            // Se amplía sola para que vea que se puede ampliar y girar
+            setTimeout(() => abrirVisor(indice, true), ESPERA_ANTES_DE_AMPLIAR);
         });
     }
 
@@ -571,18 +744,87 @@ function crearPolaroid(recuerdo, indice, descubierta) {
             inicio = null;
             if (tapada || movido > MOVIMIENTO_MAXIMO_TOQUE) return;
         }
-        abrirVisor(figura, recuerdo);
+        abrirVisor(indice);
     });
 
     figura.addEventListener("keydown", e => {
         if ((e.key === "Enter" || e.key === " ") && figura.classList.contains("descubierta")) {
             e.preventDefault();
-            abrirVisor(figura, recuerdo);
+            abrirVisor(indice);
         }
     });
 
     return figura;
 }
+
+// ================== CONTADOR DE RECUERDOS ==================
+// "Has descubierto X de Y recuerdos"; con recienDescubierta el número hace "pop"
+function actualizarContador(recienDescubierta) {
+    const contador = document.getElementById("contadorRecuerdos");
+    if (!contador) return;
+    const total = polaroids.length;
+    if (total === 0) {
+        contador.hidden = true;
+        return;
+    }
+    const vistas = polaroids.filter(p => p.figura.classList.contains("descubierta")).length;
+
+    if (vistas === total) {
+        const yaEstaba = contador.classList.contains("completo");
+        contador.classList.add("completo");
+        contador.innerHTML =
+            '<span class="contador-corazon" aria-hidden="true">🤍</span> ' +
+            '¡Has descubierto todos nuestros recuerdos! 💙 ' +
+            '<span class="contador-corazon" aria-hidden="true">🤍</span>';
+        if (recienDescubierta && !yaEstaba) {
+            contador.classList.add("pop");
+            lanzarCorazones(contador);
+        }
+    } else {
+        contador.classList.remove("completo", "pop");
+        contador.innerHTML =
+            `Has descubierto <span class="contador-num${recienDescubierta ? " pop" : ""}">${vistas}</span> de ${total} recuerdos 🤍`;
+    }
+}
+// ===========================================================
+
+// ================== AVISO "DESLIZA PARA VER MÁS" ==================
+// Solo sale si la página tiene scroll; al bajar un poco se va para siempre
+function prepararAvisoScroll() {
+    const aviso = document.getElementById("avisoScroll");
+    if (!aviso) return;
+    let retirado = false;
+
+    const scrollMaximo = () => document.documentElement.scrollHeight - window.innerHeight;
+
+    function retirar() {
+        retirado = true;
+        aviso.classList.remove("visible");
+        window.removeEventListener("scroll", alHacerScroll);
+        window.removeEventListener("resize", comprobar);
+        window.removeEventListener("load", comprobar);
+        setTimeout(() => aviso.remove(), 700);
+    }
+
+    function alHacerScroll() {
+        if (retirado) return;
+        // Si la página apenas tiene scroll, basta con bajar lo que se pueda
+        const limite = Math.min(DISTANCIA_AVISO_SCROLL, scrollMaximo() * 0.6);
+        if (window.scrollY > limite) retirar();
+    }
+
+    function comprobar() {
+        if (retirado) return;
+        aviso.classList.toggle("visible", scrollMaximo() > 20);
+        alHacerScroll();
+    }
+
+    window.addEventListener("scroll", alHacerScroll, { passive: true });
+    window.addEventListener("resize", comprobar);
+    window.addEventListener("load", comprobar); // por si cambia el alto al cargar todo
+    comprobar();
+}
+// ==================================================================
 
 // ================== APARICIÓN UNA A UNA ==================
 const cola = [];
@@ -627,6 +869,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const descubiertas = leerDescubiertas();
     recuerdos.forEach((recuerdo, i) => {
         const polaroid = crearPolaroid(recuerdo, i, descubiertas.includes(recuerdo.imagen));
+        polaroids.push({ figura: polaroid, recuerdo });
         grid.appendChild(polaroid);
         observador.observe(polaroid);
     });
@@ -634,4 +877,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (recuerdos.length === 0) {
         grid.innerHTML = '<p class="subtitulo">Todavía no hay recuerdos. Añádelos en js/fotos.js.</p>';
     }
+
+    actualizarContador(false);
+    prepararAvisoScroll();
 });

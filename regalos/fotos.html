@@ -13,6 +13,7 @@
     <div class="container" style="max-width: 900px;">
         <h1>Nuestros Recuerdos</h1>
         <p class="subtitulo">Pequeños instantes de momentos inolvidables</p>
+        <p class="contador-recuerdos" id="contadorRecuerdos" aria-live="polite"></p>
 
         <!-- Grid de la galería de fotos -->
         <div class="galeria-grid" id="galeriaGrid">
@@ -24,6 +25,12 @@
 
         <!-- Para probar: vuelve a tapar todas las fotos -->
         <p><a href="#" id="volverATapar" class="volver-a-tapar">Volver a tapar las fotos</a></p>
+    </div>
+
+    <!-- Aviso de que hay más fotos haciendo scroll (se oculta solo) -->
+    <div class="aviso-scroll" id="avisoScroll" aria-hidden="true">
+        <span class="aviso-scroll-flecha">↓</span>
+        <span>Desliza para ver más</span>
     </div>
 
     <!-- Script de la galería -->
